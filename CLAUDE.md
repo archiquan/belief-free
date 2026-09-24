@@ -1,11 +1,14 @@
-# belief-free — "Simple Strategies in Information Ripples" (Li Quan, JMP)
+# belief-free — "Predictable Play Without a Common Prior" (Li Quan, JMP; v2 title: "Simple Strategies in Information Ripples")
 
 Theory working paper, Faculty of Economics, Cambridge. This repo holds the draft,
 the referee report driving the current revision, and verification scripts.
 
 ## Files
 
-- `paper/Li_draft_v2.tex`, `paper/ref.bib` — current draft (August 2026). Compile:
+- `paper/Li_draft_v3.tex` (+ `.pdf`) — **current draft** (Sep 2026); changes vs v2 in
+  `paper/CHANGES_v3.md`. Terminology: predictable/unpredictable (not simple/sensitive),
+  conjecture profile γ, worst-case margin; never "admissible".
+- `paper/Li_draft_v2.tex`, `paper/ref.bib` — previous draft (August 2026). Compile:
   `pdflatex → bibtex → pdflatex ×2` (natbib, apalike, tikz).
 - `review/Report_quan_JMP_20260923.pdf` — referee-style report (Claude, prompted by
   supervisor), 23 Sep 2026. Recommendation: major revision; 2-month plan, items A–G.

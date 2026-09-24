@@ -1,0 +1,668 @@
+% Li_draft_v3.tex — Predictable Play Without a Common Prior (v3, September 2026)
+% Revision of Li_draft_v2.tex in response to the referee report of 23 Sep 2026
+% (review/Report_quan_JMP_20260923.pdf). Changes are listed in paper/CHANGES_v3.md.
+% Compile: pdflatex -> bibtex -> pdflatex x2, with ref.bib.
+\documentclass[12pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{natbib}
+\usepackage{booktabs}
+\usepackage{setspace}
+\usepackage{tikz}
+\usepackage{float}
+\onehalfspacing
+\bibliographystyle{apalike}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+
+\makeatletter
+\renewenvironment{proof}[1][\proofname]{\par
+  \pushQED{\qed}%
+  \normalfont \topsep6\p@\@plus6\p@\relax
+  \trivlist
+  \item[\hskip\labelsep\itshape #1\@addpunct{.}]\mbox{}\\*
+  \ignorespaces
+}{%
+  \popQED\endtrivlist\@endpefalse
+}
+\makeatother
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\title{Predictable Play Without a Common Prior}
+\author{Li Quan\thanks{Faculty of Economics, University of Cambridge. Preliminary and incomplete working draft, September 2026. Comments welcome.}}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent We study finite, symmetric, two-player games with private values, with auctions as the leading application. Each player forms a fixed conjecture about how each possible type of opponent plays; our leading case is the level-1 conjecture, a best response to a uniformly random opponent. Players need not share a prior over types. Instead, each holds a belief about the opponent's type from a class that tilts an analyst's benchmark distribution toward the player's own type. We ask which types choose the same action under every belief in the class, and call the benchmark mass of these types \emph{predictability}. A type is predictable at every benchmark if and only if one action weakly dominates every other against the conjectured play of opponent types. At a given benchmark, predictability reduces to finitely many linear inequalities, and this is where the belief class matters. We also show that an action can be chosen under some belief in the class if and only if no mixed strategy does at least as well against a finite list of beliefs and strictly better against the benchmark. In first-price auctions, capping bids at two levels makes every type predictable exactly when no value lies in an interval just above the cap. In second-price auctions, the level-1 conjecture leaves bids between values tied with truthful bidding, but any small weight on the uniform conjecture removes these ties.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+A Bayes--Nash prediction rests on two assumptions: players share a common prior about each other's private information, and each player correctly forecasts the strategies of the others. Without the common prior, a player who does not know the opponent's type has no single distribution against which to evaluate her options, and different players may reasonably evaluate them against different distributions. The question we ask is how much of behaviour an analyst can still predict. For a given game, which types choose the same action however they perceive their opponents, and which do not?
+
+To make this question tractable we fix the second assumption in a simple form and relax the first. Each player forms a \emph{conjecture} about how each possible type of opponent plays. Our leading case is the level-1 conjecture of the level-$k$ literature \citep{nagel1995, stahl1995, crawford2007levelk}: each type of opponent is conjectured to best respond to an opponent who picks actions uniformly at random. The common prior is replaced by a class of beliefs about the opponent's type. The analyst has a \emph{benchmark} distribution over types, and each player may hold any belief that tilts the benchmark toward her own type, overweighting types close to her own relative to the benchmark. A type is \emph{predictable} if it has the same unique best response under every belief in the class, and \emph{predictability} is the benchmark mass of predictable types. We keep common knowledge of the set of types, the set of actions and the payoff function. What we drop is the common prior.
+
+The following example, used throughout the paper, illustrates the idea. Two bidders take part in a first-price auction for an object. Each values the object at 1, 3 or 5, and the allowed bids are 0, 1 and 2. Under the level-1 conjecture, a bidder with value 1 bids 0, a bidder with value 3 bids 1 and a bidder with value 5 bids 2. Given this conjecture, the bidder with value 1 prefers to bid 0 whatever she believes about her opponent's value. The bidder with value 3 prefers bid 1 if she thinks a low-value opponent is likely, and bid 2 if she thinks a high-value opponent is likely. Beliefs of both kinds are in the class, so her bid cannot be predicted. The bidder with value 5 bids 2 unless she believes low-value opponents are very likely; whether the class admits such beliefs depends on the benchmark. Under the uniform benchmark, predictability is $2/3$. If the designer removes bid 2, every type has a single best bid under every belief, and predictability rises to 1 at every benchmark.
+
+Our results are of three kinds. The first concerns predictability at every benchmark. A type is predictable at every benchmark if and only if one of its actions weakly dominates every other action against the conjectured play of the opponent types (Theorem \ref{th:dominance}(ii)). This result does not depend on the class of beliefs: because the benchmark itself is always an admitted belief, a type is predictable at every benchmark exactly when it has a unique best response to every full-support belief (Lemma \ref{lem:union}). The second concerns a given benchmark, where the class of beliefs matters. A type is predictable at a given benchmark if and only if one action beats every other in finitely many weighted comparisons, one for each block of consecutive types that contains the player's own type (Theorem \ref{th:dominance}(i)). The set of actions the type may choose, its \emph{prediction set}, consists of the actions for which no mixed strategy does at least as well in each of these comparisons and strictly better against the benchmark (Theorem \ref{th:dual}). Both results reduce questions about a continuum of beliefs to finitely many linear inequalities, and both hold for any fixed conjecture, not only the level-1 conjecture.
+
+The third kind of result concerns ties. A type is unpredictable only if two actions tie at some admitted belief. Such a tie is either \emph{belief-driven}, holding only at particular beliefs, or \emph{structural}, holding at every belief because the two actions earn the same payoff against every conjectured opponent (Proposition \ref{th:sources}). Structural ties depend on the conjecture putting no weight on some actions. In the second-price auction with every value biddable, the level-1 conjecture makes every bid strictly between two values tie with truthful bidding. These bids are weakly dominated in the full game, and any positive weight on the uniform conjecture removes the ties, so that every type bids its value (Proposition \ref{prop:perturb}). In contrast, belief-driven ties of the kind in the first-price example do not depend on the conjecture putting zero weight on any action.
+
+The applications show how the design of the action set affects predictability. In first-price auctions with two allowed bids, every type is predictable at every benchmark if and only if no value lies in an interval of length equal to the bid spread just above the higher bid (Corollary \ref{cor:deadzone}). In second-price auctions, the level-1 conjecture makes every type with a bid strictly between its value and a neighbouring value unpredictable (Corollary \ref{th:gaps}), but this conclusion does not survive small perturbations of the conjecture.
+
+The closest work is \citet{borgersli2019strategically}. They fix a player's belief about the other players' preferences and ask for an action that is optimal under every belief about the others' strategies that is consistent with it. We fix the belief about strategies, the conjecture, and ask whether the optimal action changes as the belief about the opponent's type varies. Their object is a class of mechanisms; ours is a measure defined for every finite mechanism of the kind studied here. The paper is also related to the literature on predictions that do not rely on a common prior, such as interim correlated rationalizability \citep{dfm2007icr, weinsteinyildiz2007}. In the running example, rationalizability allows the bidder with value 1 to bid 1 and the bidder with value 5 to bid 1, whereas our construction predicts bids 0 and 2 (Section \ref{sec:rat}).
+
+Section \ref{sec:model} sets out the model. Section \ref{sec:results} contains the general results. Section \ref{sec:examples} studies first-price and second-price auctions. Section \ref{sec:literature} discusses the literature, and Section \ref{sec:outlook} concludes. Proofs are in Appendix \ref{app:proofs}, and Appendix \ref{app:resolutions} compares the equal-weight treatment of tied conjectures with pure alternatives.
+
+\section{The model}\label{sec:model}
+
+\subsection{Types, actions and payoffs}
+
+There is a finite set of types $T \subset \mathbb{R}$ and a finite set of actions $A \subset \mathbb{R}$. Two players, each with a type in $T$, choose actions simultaneously. A player of type $t$ who chooses $b \in A$ while the opponent chooses $b' \in A$ receives $u(b, b'; t)$. The opponent's type does not enter the payoff: values are private. We denote generic actions by $b, b' \in A$ and generic opponent types by $s \in T$. We assume that $A$ contains no duplicate actions: for any two distinct actions there is some type and some opponent action at which they give different payoffs.
+
+We interpret $T$ as the set of values a player can distinguish when thinking about opponents. It is coarse: a handful of possibilities, not a continuum, and refining the set of allowed bids does not refine it. Both players use the same $T$.
+
+For a probability distribution $\sigma \in \Delta(A)$ over own actions (a mixed strategy) and a distribution $\alpha \in \Delta(A)$ over the opponent's actions, we write $u(\sigma, \alpha; t) = \sum_{b, b'} \sigma(b)\alpha(b') u(b, b'; t)$.
+
+\subsection{Conjectures about opponents' play}
+
+A \emph{conjecture profile} $\gamma : T \to \Delta(A)$ assigns to each opponent type $s$ a distribution $\gamma(s)$ over the actions that type is conjectured to choose. The conjecture profile describes how a player thinks each type of opponent plays; it is held fixed throughout the analysis. Our general results (Section \ref{sec:results}) hold for every conjecture profile. They also allow the profile to differ across players: the prediction for a player of type $t$ uses only the conjecture that this player holds.
+
+Our leading case is the level-1 conjecture. A player who knows only which actions are available, and nothing else about the opponent, might treat each action as equally likely. The \emph{uniform conjecture} $R_A$ puts probability $1/|A|$ on each action. Each type of opponent is then conjectured to best respond to $R_A$.
+
+\begin{definition}[Anchor]\label{def:anchor}
+For $s \in T$, let
+\[
+B^0(s) = \argmax_{b \in A} \ \sum_{b' \in A} u(b, b'; s)
+\]
+be the set of best responses of type $s$ to the uniform conjecture. The \emph{anchor} $\beta(s)$ of type $s$ is the uniform distribution on $B^0(s)$. The \emph{level-1 conjecture profile} is $\beta$.
+\end{definition}
+
+When $B^0(s)$ contains more than one action, the anchor spreads weight equally over them. This expresses that the conjecturing player has no reason to favour one of the tied actions; it is not a claim that the opponent randomises. Appendix \ref{app:resolutions} compares this choice with conjectures that pick one of the tied actions. The uniform starting point is the standard specification of level-0 play in estimated level-$k$ models, and measured depths of reasoning concentrate at one or two steps \citep{nagel1995, stahl1995, costagomes2001, crawford2007levelk, arad2012}. We regard it as a convenient and empirically grounded default, not as the only reasonable conjecture. Section \ref{sec:perturb} shows which conclusions change when the conjecture is perturbed.
+
+\subsection{Beliefs about the opponent's type}
+
+The analyst has a \emph{benchmark} $p \in \Delta(T)$ with $p_s > 0$ for every $s \in T$. We read $p$ as the composition of the population of players. Players need not know $p$. A player of type $t$ holds a belief $q \in \Delta(T)$ about the opponent's type. We allow any belief that differs from the benchmark by overweighting types close to the player's own.
+
+\begin{definition}[Centred belief]\label{def:centred}
+A belief $q \in \Delta(T)$ is \emph{centred at $t$} (relative to $p$) if $q_s > 0$ for every $s \in T$ and the likelihood ratio $q_s/p_s$ weakly increases in $s$ for $s \le t$ and weakly decreases in $s$ for $s \ge t$. We write $Q_p(t)$ for the set of beliefs centred at $t$.
+\end{definition}
+
+The benchmark itself, $q = p$, is centred at every type. Centredness restricts only the ratio $q_s/p_s$: it must be largest at the player's own type and fall away from it on each side. The two sides may fall at different rates, and no functional form is imposed. At one extreme a player holds the benchmark; at the other she is almost certain the opponent's type equals her own. Tilting beliefs toward one's own type is documented as the false consensus effect \citep{ross1977false} and is the belief form used by \citet{gpr2021projection} in auctions.
+
+This modelling choice has a cost that we state plainly. Beliefs are defined as distortions of $p$, so the analyst assumes that players know the population up to a tilt toward their own type. What players need not know is the size or the shape of the tilt, and they need not agree with each other.
+
+Beliefs that put all their weight on a block of consecutive types play a special role in the analysis. A \emph{window at $t$} is a set $W \subseteq T$ of consecutive types that contains $t$. For a window $W$, let $q^W$ be the benchmark conditioned on $W$: $q^W_s = p_s / \sum_{s' \in W} p_{s'}$ for $s \in W$ and $q^W_s = 0$ otherwise. The window $W = T$ gives $q^T = p$. For example, with $T = \{1, 3, 5\}$ the windows at $5$ are $\{5\}$, $\{3, 5\}$ and $\{1,3,5\}$. Every other window belief puts zero weight on some type, so it is not centred itself, but it is a limit of centred beliefs (Lemma \ref{lem:windows}).
+
+\subsection{Prediction sets and predictability}
+
+Given a conjecture profile $\gamma$ and a belief $q$, a player of type $t$ evaluates action $b$ by
+\[
+U^t_q(b) = \sum_{s \in T} q_s \, u(b, \gamma(s); t),
+\]
+the expected payoff when the opponent's type is drawn from $q$ and a type-$s$ opponent plays $\gamma(s)$. For a mixed strategy $\sigma$ we write $U^t_q(\sigma) = \sum_b \sigma(b) U^t_q(b)$. The function $U^t_q(b)$ is defined for every $q \in \Delta(T)$, and it is linear in $q$. Throughout, the conjecture profile is fixed and suppressed from the notation. In the applications it is the level-1 profile $\beta$ unless stated otherwise.
+
+\begin{definition}[Prediction set and predictability]\label{def:predset}
+The \emph{prediction set} of type $t$ at benchmark $p$ is
+\[
+F_p(t) = \bigcup_{q \in Q_p(t)} \argmax_{b \in A} U^t_q(b).
+\]
+Type $t$ is \emph{predictable at $p$} if $F_p(t)$ contains exactly one action, and \emph{unpredictable at $p$} otherwise. \emph{Predictability} is the benchmark mass of predictable types,
+\[
+P(p) = \sum_{t \in T:\ |F_p(t)| = 1} p_t .
+\]
+\end{definition}
+
+If several actions are optimal at one belief, all of them enter $F_p(t)$. The prediction set does not say which action a type chooses, nor with what probability. It says which actions are optimal for some belief in the class. A type is predictable when the answer does not depend on the belief.
+
+\begin{remark}[Smaller classes]\label{rem:mono}
+If each $Q_p(t)$ is replaced by a nonempty subset, prediction sets weakly shrink and every predictable type remains predictable. Predictability computed with $Q_p(t)$ is therefore a lower bound for predictability computed with any smaller class, for example beliefs whose tilt depends only on the distance $|t - s|$.
+\end{remark}
+
+\section{General results}\label{sec:results}
+
+All results in this section hold for an arbitrary conjecture profile $\gamma$.
+
+\subsection{Which beliefs matter}
+
+For two actions $b, b'$ and type $t$, define the \emph{difference vector} $\delta = (\delta_s)_{s \in T}$ by $\delta_s = u(b, \gamma(s); t) - u(b', \gamma(s); t)$: the advantage of $b$ over $b'$ against a type-$s$ opponent. Then
+\[
+U^t_q(b) - U^t_q(b') = \sum_{s \in T} q_s \delta_s .
+\]
+Comparisons between actions are linear in the belief. The next two lemmas describe the beliefs that matter for such comparisons.
+
+\begin{lemma}[Window beliefs]\label{lem:windows}
+A belief $q$ is centred at $t$ if and only if $q = \sum_{W} \lambda_W q^W$ for weights $\lambda_W \ge 0$ that sum to one and put strictly positive weight on $W = T$. Here the sum is over the windows at $t$. Consequently, the closure of $Q_p(t)$ is the set of all mixtures of the window beliefs $q^W$.
+\end{lemma}
+
+The lemma is a discrete version of Khintchine's theorem that a unimodal distribution is a mixture of uniform distributions on intervals containing the mode \citep{khintchine1938}. Here the unimodal object is the likelihood ratio $q_s/p_s$. Because payoff comparisons are linear in $q$, a comparison holds at every centred belief if it holds at every window belief, with strict inequality at $q^T = p$.
+
+\begin{lemma}[Every benchmark]\label{lem:union}
+The union of $Q_p(t)$ over all full-support benchmarks $p$ is the set of all full-support beliefs. Hence type $t$ is predictable at every benchmark if and only if it has the same unique best response under every full-support belief.
+\end{lemma}
+
+Lemma \ref{lem:union} separates the results of this paper into two groups. Results that hold \emph{at every benchmark}, including Theorem \ref{th:dominance}(ii), the results on two-bid caps and the second-price results of Section \ref{sec:spa}, do not use centredness: they would hold for any class of beliefs that contains the benchmark. Results \emph{at a given benchmark}, including Theorem \ref{th:dominance}(i), Theorem \ref{th:dual} and the first-price threshold of Example \ref{ex:fpa}, do use it. So do the statements that a type is unpredictable at every benchmark.
+
+\subsection{Predictable types}
+
+\begin{theorem}[Predictable types]\label{th:dominance}
+Fix a type $t$, and for distinct actions $b, b'$ let $\delta^{bb'}$ be the difference vector.
+\begin{enumerate}
+\item[(i)] Type $t$ is predictable at $p$ if and only if some $b \in A$ satisfies, for every $b' \neq b$,
+\[
+\sum_{s \in W} p_s\, \delta^{bb'}_s \;\ge\; 0 \quad \text{for every window } W \text{ at } t,
+\]
+with strict inequality for $W = T$.
+\item[(ii)] Type $t$ is predictable at every benchmark if and only if some $b \in A$ satisfies, for every $b' \neq b$, $\delta^{bb'}_s \ge 0$ for all $s$ and $\delta^{bb'}_s > 0$ for some $s$.
+\end{enumerate}
+\end{theorem}
+
+Part (ii) says that $b$ weakly dominates every other action when each opponent type plays according to the conjecture. This is weak dominance in the game in which the opponent's ``strategies'' are the conjectured behaviours $\gamma(s)$, one for each type, and it is the familiar characterisation of weak dominance through full-support beliefs. Part (i) is the weighted version at a given benchmark: one weighted sum for each window at $t$. With $|T|$ types there are at most $|T|(|T|+1)/2$ windows, so the test is finite. Each inequality is linear in $p$, so the set of benchmarks at which a type is predictable is a finite union of convex sets cut out by linear inequalities.
+
+\subsection{Which actions can be chosen}
+
+Theorem \ref{th:dominance} decides whether $F_p(t)$ has one element. The next result describes $F_p(t)$ itself.
+
+\begin{theorem}[Prediction sets]\label{th:dual}
+Fix a type $t$ and a benchmark $p$. An action $b$ belongs to $F_p(t)$ if and only if there is no mixed strategy $\sigma \in \Delta(A)$ such that
+\[
+U^t_{q^W}(\sigma) \ge U^t_{q^W}(b) \ \text{ for every window } W \text{ at } t, \qquad \text{and} \qquad U^t_{p}(\sigma) > U^t_{p}(b).
+\]
+\end{theorem}
+
+In words, $b$ can be chosen under some centred belief unless some mixed strategy does at least as well against every window belief and strictly better against the benchmark. The window beliefs play the role that states of the world play in the definition of weak dominance, except that strict improvement is required against the benchmark. The theorem is the familiar equivalence between being a best response to some belief and not being dominated by a mixed strategy, applied to the set of centred beliefs; $F_p(t)$ is the set of actions that are optimal under some belief in a set, the choice criterion proposed by \citet{levi1974}. It turns the question whether an action is ever chosen into a linear programme with $|A|$ variables. When $F_p(t)$ has one element, part (i) of Theorem \ref{th:dominance} shows that the pure strategy $b$ itself does the dominating; when $F_p(t)$ has several elements, mixed strategies can be needed.
+
+\subsection{Ties}\label{sec:ties}
+
+A type is unpredictable exactly when some admitted belief makes two actions jointly optimal (Proposition \ref{prop:attainedtie} in the Appendix). Ties between two actions come in two kinds.
+
+\begin{proposition}[Two kinds of ties]\label{th:sources}
+Fix a type $t$ and distinct actions $b, b'$ with difference vector $\delta$.
+\begin{enumerate}
+\item[(i)] If $\delta \neq 0$, the pair ties only on a set of beliefs of dimension at most $|T| - 2$: almost every centred belief ranks the two actions strictly. We call such a tie \emph{belief-driven}.
+\item[(ii)] If $\delta = 0$, the pair ties at every belief and every benchmark. We call such a tie \emph{structural}.
+\end{enumerate}
+\end{proposition}
+
+A structural tie means that $b$ and $b'$ earn the same payoff against every conjectured opponent. This can happen although the two actions differ in the full game: they may differ only against opponent actions to which the conjecture gives zero weight. In the running first-price example, type 3's bids 1 and 2 have $\delta = (1, 0, -\tfrac12)$, a belief-driven tie. Section \ref{sec:spa} gives structural ties.
+
+\subsection{Perturbed conjectures}\label{sec:perturb}
+
+Structural ties rely on the conjecture putting zero weight on the opponent actions at which $b$ and $b'$ differ. A natural check, in the spirit of cognitive hierarchy models \citep{camerer2004cognitive}, is to let each opponent type play the uniform conjecture with a small probability. For $\varepsilon \in (0, 1)$ let $\gamma^\varepsilon(s) = (1 - \varepsilon)\gamma(s) + \varepsilon R_A$. For a type $t$ and actions $b, b'$, let $d(a) = u(b, a; t) - u(b', a; t)$ be the difference against each opponent action $a$.
+
+\begin{proposition}[Perturbed conjectures]\label{prop:perturb}
+Fix $t$, distinct $b, b'$ and $\varepsilon \in (0,1)$. Under $\gamma^\varepsilon$,
+\[
+U^t_q(b) - U^t_q(b') = (1-\varepsilon) \sum_{s \in T} q_s \delta_s + \frac{\varepsilon}{|A|} \sum_{a \in A} d(a).
+\]
+Hence a structural tie under $\gamma$ remains a tie under $\gamma^\varepsilon$ if and only if $\sum_{a \in A} d(a) = 0$. Otherwise the pair is ranked strictly, in the same direction at every belief.
+\end{proposition}
+
+The ties that survive are those whose payoff differences cancel against the uniform conjecture. If $d \neq 0$ and $\sum_a d(a) = 0$, then $d$ takes both signs, so neither action weakly dominates the other in the full game. In particular, the perturbation removes every structural tie in which one of the two actions weakly dominates the other in the full game, since then $\sum_a d(a) \neq 0$.
+
+For belief-driven ties the effect is different. For each fixed benchmark, a type that is unpredictable because two actions are each strictly optimal at some centred belief remains unpredictable for all sufficiently small $\varepsilon$. The required $\varepsilon$ may depend on $p$, however. In Example \ref{ex:fpa} below, type 3 is unpredictable at every benchmark under $\beta$, but with $\varepsilon = 1/100$ it bids 1 at every centred belief when $p = (\tfrac{999}{2000}, \tfrac{999}{2000}, \tfrac{1}{1000})$.
+
+\subsection{Margins}
+
+A prediction may be unique and still rest on a small payoff difference.
+
+\begin{definition}[Margin]\label{def:margin}
+Let $t$ be predictable at $p$ with $F_p(t) = \{b\}$. Its \emph{margin} at $q \in Q_p(t)$ is $\min_{b' \neq b} \bigl( U^t_q(b) - U^t_q(b') \bigr)$, and its \emph{worst-case margin} at $p$ is the infimum of the margin over $Q_p(t)$.
+\end{definition}
+
+\begin{proposition}[Margins]\label{prop:margins}
+Let $t$ be predictable at $p$ with $F_p(t) = \{b\}$.
+\begin{enumerate}
+\item[(i)] The worst-case margin at $p$ is $\displaystyle \min_{b' \neq b} \ \min_{W} \ \frac{1}{p(W)} \sum_{s \in W} p_s\, \delta^{bb'}_s$, where $W$ ranges over the windows at $t$ and $p(W) = \sum_{s \in W} p_s$.
+\end{enumerate}
+Suppose further that $t$ is predictable at every benchmark.
+\begin{enumerate}
+\item[(ii)] The worst-case margin is zero at every benchmark if and only if $\delta^{bb'}_t = 0$ for some $b' \neq b$.
+\item[(iii)] The worst-case margin is bounded below by a positive constant that does not depend on the benchmark if and only if $\delta^{bb'}_s > 0$ for every $b' \neq b$ and every $s \in T$. The largest such constant is the smallest of these values.
+\end{enumerate}
+\end{proposition}
+
+Part (ii) has a simple reading. Because $\{t\}$ is a window, a player who is nearly certain that the opponent has her own type evaluates actions against that type's conjectured play only. If the predicted action ties there with some other action, the margin can be made arbitrarily small.
+
+\subsection{When the conjecture is confirmed}
+
+The following corollaries apply to the level-1 profile $\beta$. They identify when the predicted play coincides with the conjecture the players started from.
+
+\begin{corollary}[Confirmed conjectures]\label{cor:coverage}
+Suppose every $B^0(s)$ is a singleton and every action in $A$ is the anchor of some type. If $t$ is predictable at every benchmark with $F_p(t) = \{b\}$, then $B^0(t) = \{b\}$.
+\end{corollary}
+
+\begin{corollary}[Ex-post equilibrium]\label{cor:expost}
+Suppose every $B^0(s)$ is a singleton, and write $\sigma(t)$ for the action of a type that is predictable at every benchmark. If every type is predictable at every benchmark and $\sigma = \beta$, then $\sigma$ is a weak ex-post equilibrium of the game on $T$, strict against each alternative action at some opponent type. Conversely, if $\beta$ is such an equilibrium, every type is predictable at every benchmark.
+\end{corollary}
+
+Ex-post equilibria do not require a prior, so the point of Corollary \ref{cor:expost} is not that a prior is avoided. It is that, under the hypothesis of Corollary \ref{cor:coverage}, full predictability at every benchmark and ex-post equilibrium of the level-1 profile coincide. When that holds, the players' conjecture is exactly what they are predicted to do, so a further round of reasoning returns the same profile.
+
+\section{Applications}\label{sec:examples}
+
+\subsection{A first-price auction}\label{sec:fpa}
+
+In a first-price auction the winner pays her own bid, so
+\[
+u(b, b'; t) = (t - b)\bigl[\mathbf{1}(b > b') + \tfrac12 \mathbf{1}(b = b')\bigr].
+\]
+Raising a bid increases the chance of winning and lowers the surplus from winning, so beliefs about the opponent's type can reverse the preferred bid. Let $T = \{1, 3, 5\}$ and $A = \{0, 1, 2\}$, with the level-1 conjecture.
+
+\begin{example}\label{ex:fpa}
+The anchors are unique: $B^0 = (\{0\}, \{1\}, \{2\})$, so $\beta = (0, 1, 2)$.
+\begin{enumerate}
+\item[(i)] Type 1 is predictable at every benchmark, with $F_p(1) = \{0\}$.
+\item[(ii)] Type 3 is unpredictable at every benchmark, with $F_p(3) = \{1, 2\}$.
+\item[(iii)] Type 5 is predictable at $p$, with $F_p(5) = \{2\}$, if and only if $p_3 + \tfrac{3}{2} p_5 > p_1$. At equality the benchmark belief $q = p$ makes bids 1 and 2 tie, so type 5 is unpredictable there.
+\end{enumerate}
+Under the uniform benchmark predictability is $2/3$, and expected revenue, over all selections from the prediction sets, lies in $[13/9,\, 16/9]$.
+\end{example}
+
+The calculations are short. For type 3, bids 1 and 2 earn $(2, 1, 0)$ and $(1, 1, \tfrac12)$ against the three opponent types, so $U^3_q(1) - U^3_q(2) = q_1 - \tfrac12 q_5$. Types 1 and 5 lie on opposite sides of type 3, and centredness constrains each side separately, so both signs occur among centred beliefs at every benchmark. Bid 0 is never optimal for type 3, since $U^3_q(1) - U^3_q(0) = \tfrac12 q_1 + q_3 > 0$. For type 5, $U^5_q(2) - U^5_q(1) = -q_1 + q_3 + \tfrac32 q_5$. At the three windows at type 5 this expression is proportional to $\tfrac32 p_5$, $p_3 + \tfrac32 p_5$ and $-p_1 + p_3 + \tfrac32 p_5$; all three are positive exactly when $p_3 + \tfrac32 p_5 > p_1$, which gives (iii). Under the uniform benchmark the anchors also form a Bayes--Nash equilibrium of the game with values drawn from $p$; this coincidence is specific to the example.
+
+\emph{The role of centredness.} Type 3's behaviour is not pinned down because centredness imposes no relation between the weights on types 1 and 5, which lie on opposite sides of type 3. An analyst prepared to assume that the tilt depends only on the distance $|t-s|$ would find type 3 predictable at the uniform benchmark (Remark \ref{rem:mono}), since $U^3_q(1) - U^3_q(2)$ would then have the sign of $p_1 - \tfrac12 p_5 > 0$. Type 1 is predictable at every benchmark by Theorem \ref{th:dominance}(ii), so its prediction does not use centredness. Type 5's prediction does: by Lemma \ref{lem:union}, with all full-support beliefs admitted type 5 would be unpredictable at every benchmark.
+
+\subsection{Comparison with rationalizability}\label{sec:rat}
+
+Interim correlated rationalizability \citep{dfm2007icr} makes no assumption on beliefs beyond rationality and common certainty of rationality. In the private-value game of Example \ref{ex:fpa}, with no restriction on beliefs about the opponent's type, it selects the actions that survive iterated elimination of actions that are never a best response to a belief about the opponent's type and action. For type 1, bid 2 always earns a negative payoff and is eliminated, while bid 1 earns zero against every opponent bid and is therefore a best response to any belief that puts no weight on bid 0. For types 3 and 5, bid 0 is strictly dominated by a mixture of bids 1 and 2, while bid 1 is the best response to an opponent who bids 0 and bid 2 the best response to an opponent who bids 2. No further actions are eliminated, so the rationalizable sets are $\{0, 1\}$, $\{1, 2\}$ and $\{1, 2\}$, against prediction sets $\{0\}$, $\{1,2\}$ and $\{2\}$ at the uniform benchmark.
+
+The sharper prediction for type 1 comes from the level-1 conjecture together with full-support beliefs: type 1 puts positive weight on a type-1 opponent, who is conjectured to bid 0. It holds at every benchmark and does not use centredness. The sharper prediction for type 5 comes from centredness: it holds exactly at the benchmarks described in Example \ref{ex:fpa}(iii). This is what the two ingredients of the model add to rationalizability in the running example.
+
+\subsection{Two-bid caps}\label{sec:caps}
+
+Removing bid 2 from Example \ref{ex:fpa} leaves $A = \{0, 1\}$ and anchors $(0, 1, 1)$. Every type then has one best bid at every full-support belief, with $F_p(1) = \{0\}$ and $F_p(3) = F_p(5) = \{1\}$, so predictability is 1 at every benchmark. With two bids the analysis reduces to one comparison, and the answer can be read off the bids.
+
+\begin{corollary}[Two-bid caps]\label{prop:cap}
+Consider the first-price auction with $A = \{a_1, a_2\}$, $a_1 < a_2$, and the level-1 conjecture, and let $\theta = \tfrac{1}{2}(3 a_2 - a_1)$.
+\begin{enumerate}
+\item[(i)] $B^0(t) = \{a_2\}$ for $t > \theta$, $B^0(t) = \{a_1\}$ for $t < \theta$, and $B^0(\theta) = \{a_1, a_2\}$.
+\item[(ii)] For a type $t$, the difference vector of $a_2$ over $a_1$ is
+\[
+\delta_s \;=\;
+\begin{cases}
+\tfrac12\,(t + a_1 - 2a_2), & s < \theta, \\[2pt]
+\tfrac12\,(t - \theta),     & s = \theta, \\[2pt]
+\tfrac12\,(t - a_2),        & s > \theta,
+\end{cases}
+\]
+and these three values increase in that order.
+\item[(iii)] Type $t$ is predictable at every benchmark if and only if the values $\delta_s$, $s \in T$, are all weakly positive or all weakly negative, and not all zero.
+\end{enumerate}
+\end{corollary}
+
+The bids split opponents into those conjectured to bid high, those conjectured to bid low, and at most one type at the cutoff $\theta$ who is conjectured to mix. The player's comparison is one number for each opponent type, larger against opponents conjectured to bid high. Her bid does not depend on her belief exactly when this number does not change sign.
+
+\begin{corollary}[Dead zone]\label{cor:deadzone}
+Under the hypotheses of Corollary \ref{prop:cap}, let $D(A) = \bigl(a_2,\; 2a_2 - a_1\bigr)$. If $T$ contains types strictly below and strictly above $\theta$, then $P(p) = 1$ at every benchmark if and only if no type lies in $D(A)$.
+\end{corollary}
+
+The \emph{dead zone} $D(A)$ is an open interval of length $a_2 - a_1$ just above the higher bid. A type below the higher bid prefers the low bid and a type well above it prefers the high bid, but a type in the dead zone prefers the high bid against high-bidding opponents and the low bid against low-bidding ones. When $T$ lies on one side of $\theta$, the relevant interval is smaller; the proof in Appendix \ref{app:proofs} gives it exactly. For instance, $A = \{2, 4\}$ against $T = \{1, 3, 5\}$ has $\theta = 5$ and type $5 \in D(A)$, yet every type bids 2 at every belief. Against $T = \{1,3,5\}$, Corollary \ref{prop:cap} settles all fifteen two-bid menus on $\{0, \dots, 5\}$: thirteen make every type predictable at every benchmark, and the two that fail are $\{0,2\}$, whose dead zone $(2,4)$ contains 3, and $\{0,3\}$, whose dead zone $(3,6)$ contains 5.
+
+\begin{corollary}[Separating or pooling]\label{cor:sepool}
+Under the hypotheses of Corollary \ref{prop:cap}, suppose every type is predictable at every benchmark. If $T$ lies weakly on one side of $\theta$, every type bids $a_1$ (if $T$ lies below) or $a_2$ (if above). Otherwise every $t < \theta$ bids $a_1$ and every $t > \theta$ bids $a_2$.
+\end{corollary}
+
+A cap that makes every type predictable therefore either separates the types at the cutoff or pools them all on one bid. Pooling is easy to guarantee from a lower bound on values alone (Corollary \ref{cor:floor} in the Appendix), but it destroys the information in bids. Predictability is one criterion among several: a cap at $\{0,1\}$ against values up to 5 achieves full predictability at a cost in revenue, and we do not study that trade-off here.
+
+\begin{corollary}[First-price margins]\label{cor:fpmargins}
+In the first-price auction with $|A| \ge 2$ and the level-1 conjecture, let $t$ be predictable at every benchmark.
+\begin{enumerate}
+\item[(i)] If $B^0(t) = \{a^*\}$, the worst-case margin of $t$ is zero at every benchmark if and only if the bid $(t + a^*)/2$ belongs to $A$, lies above $a^*$, and the predicted bid is $a^*$ or $(t+a^*)/2$.
+\item[(ii)] With two bids, no such configuration exists, and the worst-case margin is zero at every benchmark exactly at $t = \theta$.
+\end{enumerate}
+\end{corollary}
+
+\begin{example}\label{ex:strict}
+Take $T = \{\tfrac12, 3, 5\}$ and $A = \{0, 1\}$, so $\theta = \tfrac32$ and no type lies in $[1, 2]$. The anchors are $(0, 1, 1)$. Type $\tfrac12$ bids 0 and types 3 and 5 bid 1, so the cap separates. The difference vectors of the predicted bid over the other bid are $(\tfrac34, \tfrac14, \tfrac14)$, $(\tfrac12, 1, 1)$ and $(\tfrac32, 2, 2)$, all strictly positive, so by Proposition \ref{prop:margins}(iii) the margins are at least $\tfrac14$, $\tfrac12$ and $\tfrac32$ at every belief and every benchmark. Every bid is the anchor of some type, so by Corollaries \ref{cor:coverage} and \ref{cor:expost} the predicted profile is the level-1 profile and a weak ex-post equilibrium.
+\end{example}
+
+\subsection{A second-price auction}\label{sec:spa}
+
+In a second-price auction the winner pays the opponent's bid:
+\[
+u(b, b'; t) = (t - b')\mathbf{1}(b > b') + \tfrac12 (t - b)\mathbf{1}(b = b').
+\]
+Keep $T = \{1,3,5\}$ and let $A = \{0, 1, \dots, 5\}$.
+
+\begin{lemma}[Truthful anchor]\label{lem:truthful}
+In the second-price auction, if $T \subseteq A$ then $B^0(t) = \{t\}$ for every type. The same holds for the best responses to any full-support conjecture.
+\end{lemma}
+
+\begin{example}\label{ex:spa}
+Under the level-1 conjecture, every type is unpredictable at every benchmark:
+\[
+F_p(1) = \{0, 1, 2\}, \qquad F_p(3) = \{2, 3, 4\}, \qquad F_p(5) = \{4, 5\}.
+\]
+Within each set, expected payoffs are equal at every belief. Predictability is $0$ at every benchmark. Under the uniform benchmark, expected revenue over selections from the prediction sets lies in $[10/9,\, 3]$, and truthful bidding gives $19/9$.
+\end{example}
+
+To see why, compare type 3's truthful bid with bid 4 against the three conjectured bids 1, 3 and 5. Both earn $2$ against bid 1, nothing against bid 3 (bid 3 ties and pays 3, bid 4 wins and pays 3), and nothing against bid 5. The two bids differ in the full game only against an opponent who bids 4, and no opponent type is conjectured to bid 4. The tie is structural. Bid 4 is weakly dominated by bid 3 in the full game.
+
+\begin{corollary}[Bids between values]\label{th:gaps}
+In the second-price auction with $T \subseteq A$ and the level-1 conjecture, the following are equivalent for each type $t$:
+\begin{enumerate}
+\item[(i)] $t$ is unpredictable at some benchmark;
+\item[(ii)] $t$ is unpredictable at every benchmark;
+\item[(iii)] some bid in $A$ lies strictly between $t$ and a neighbouring value in $T$, or below $\min T$ when $t = \min T$, or above $\max T$ when $t = \max T$.
+\end{enumerate}
+Consequently, $P(p) = 1$ at some (equivalently, every) benchmark if and only if $A = T$.
+\end{corollary}
+
+Under the level-1 conjecture, aligning the bids with the values removes every structural tie. Two qualifications apply. First, the values are the players' perceived values, which the designer does not observe. Second, and more importantly, the conclusion depends on the level-1 conjecture putting zero weight on bids between values. By Proposition \ref{prop:perturb}, any positive weight on the uniform conjecture restores a unique prediction on every grid.
+
+\begin{corollary}[Perturbed second-price conjecture]\label{cor:spaperturb}
+In the second-price auction with $T \subseteq A$, let each opponent type $s$ be conjectured to play $(1-\varepsilon)\beta(s) + \varepsilon R_A$ with $\varepsilon \in (0,1)$. Then $F_p(t) = \{t\}$ for every type and every benchmark, so $P(p) = 1$.
+\end{corollary}
+
+The structural ties of Example \ref{ex:spa} are therefore a feature of the pure level-1 conjecture, and they are ties with weakly dominated bids. \citet{borgersli2019strategically} rule such choices out by assumption, by restricting each player to actions that are not weakly dominated. Our construction does not, and Corollary \ref{cor:spaperturb} shows that a small amount of noise in the conjecture has the same effect. The margins of Proposition \ref{prop:margins} show that the prediction remains fragile in another sense.
+
+\begin{corollary}[Second-price margins]\label{cor:spamargins}
+In the second-price auction with $T \subseteq A$ and the level-1 conjecture, for every type and every alternative bid the difference vector is zero at the player's own type. Hence every type that is predictable at every benchmark has worst-case margin zero at every benchmark.
+\end{corollary}
+
+Against an opponent who bids the player's own value, winning means paying that value, so every bid earns nothing. A player who is nearly certain that her opponent is like her therefore has almost no reason to prefer the truthful bid. In the two-bid first-price cap of Section \ref{sec:caps}, by contrast, the worst-case margins are bounded away from zero except at the cutoff (Corollary \ref{cor:fpmargins}).
+
+\subsection{A tied anchor}\label{sec:tied}
+
+Return to the first-price auction with $T = \{1, 3, 5\}$ and remove the middle bid: $A = \{0, 2\}$. Type 3 is indifferent against the uniform conjecture, so $B^0(3) = \{0, 2\}$ and $\beta(3)$ puts probability $\tfrac12$ on each bid.
+
+\begin{example}\label{ex:tied}
+Type 3's bids earn $(\tfrac32, \tfrac34, 0)$ and $(1, \tfrac34, \tfrac12)$ against the three opponent types, so $U^3_q(0) - U^3_q(2) = \tfrac12 q_1 - \tfrac12 q_5$. Both signs occur among centred beliefs at every benchmark, so $F_p(3) = \{0, 2\}$ at every benchmark. Types 1 and 5 are predictable at every benchmark, with $F_p(1) = \{0\}$ and $F_p(5) = \{2\}$, so $P(p) = p_1 + p_5$.
+\end{example}
+
+The tie at the anchor and the tie in type 3's own choice are different things: bids 0 and 2 tie against the uniform conjecture, but their payoffs against the conjectured opponents differ, and the tie in type 3's choice is belief-driven. In this example $\sum_a d(a) = \tfrac12 - \tfrac12 = 0$, so by Proposition \ref{prop:perturb} the conclusion is unchanged under the perturbed conjecture. The equal weight $\tfrac12$ on the tied bids matters, however: with weight $w \neq \tfrac12$ on bid 0, type 3 is predictable at some benchmarks (Appendix \ref{app:resolutions}).
+
+\section{Related literature}\label{sec:literature}
+
+\emph{Predictions without a common prior.} The canonical answers to our opening question are interim correlated rationalizability \citep{dfm2007icr}, the structure theorem of \citet{weinsteinyildiz2007}, $\Delta$-rationalizability \citep{battigallisiniscalchi2003} and Bayes correlated equilibrium \citep{bergemannmorris2013}. These make weak assumptions on beliefs and deliver sets of outcomes. We make a stronger assumption on strategic reasoning, a fixed conjecture, and a weaker one than a common prior on beliefs about types. Section \ref{sec:rat} shows what this adds in the running example.
+
+\emph{Simplicity.} Dominant-strategy and obviously strategy-proof mechanisms \citep{li2017osp} require no forecasts of others' play. \citet{borgersli2019strategically} call a mechanism strategically simple if each player's optimal choice depends only on her belief about others' preferences, together with certainty that others do not play weakly dominated strategies. For a fixed belief about preferences they require an action that is optimal under every consistent belief about strategies. We instead fix a single belief about strategies, which is one of those that Börgers and Li consider, since a best response to the full-support uniform conjecture is never weakly dominated, and we vary the belief about types. \citet{pyciatroyan2023} relate simplicity to the depth of foresight required. These papers characterise classes of mechanisms from the player's point of view. Predictability is a measure, defined for every finite mechanism of the kind studied here, from the analyst's point of view. In the sealed-bid second-price auction the two points of view come apart: the auction is strategy-proof, while under the level-1 conjecture predictability can be zero (Example \ref{ex:spa}). \citet{zhang2026gda} restricts attention to dominant-strategy mechanisms and optimises a worst-case welfare guarantee over distributions consistent with a coarse statistic.
+
+\emph{Level-$k$ and cognitive hierarchy.} Our anchors are level-1 play, and the case $q = p$ is level-2 play \citep{nagel1995, stahl1995, costagomes2001, crawford2013jel}. \citet{crawford2007levelk} study level-$k$ bidding in auctions. Cognitive hierarchy \citep{camerer2004cognitive} mixes lower levels, which corresponds to the perturbed conjectures of Section \ref{sec:perturb}. \citet{declippel2019levelk} study implementation when the designer does not know players' levels, and \citet{strzalecki2014depth} and \citet{heifetzkets2018} study how finite depth of reasoning interacts with higher-order beliefs.
+
+\emph{Beliefs tilted toward one's own type.} Projection of private values \citep{gpr2021projection} and the false consensus effect \citep{ross1977false} motivate centred beliefs. Projected beliefs of the form $\alpha \delta_t + (1-\alpha) p$ are centred. \citet{gpr2021projection} embed them in an equilibrium, so only their belief form, not their solution concept, is an instance of our construction. Cursed equilibrium \citep{eyster2005cursed} and analogy-based expectations \citep{jehiel2005analogy, jehielkoessler2008} also model misperception of opponents; their conjectures are not of our form.
+
+\emph{Sets of beliefs.} Choice under a set of priors is studied by \citet{levi1974}, \citet{walley1991}, \citet{bewley2002} and, in games, \citet{lo1996}. Our prediction set applies Levi's criterion, choosing any action that is optimal under some belief in the set, to the centred beliefs. Lemma \ref{lem:windows} is a discrete form of Khintchine's representation of unimodal distributions \citep{khintchine1938}.
+
+\emph{Coarse perception.} We take from a broad literature only the premise that the values players distinguish are coarser than the grid of allowed actions: people reason in categories \citep{mss2008coarse}, bundle opponents' contingencies \citep{jehiel2005analogy}, compress probability judgements \citep{enke2023cognitive}, read odometers by their leading digits \citep{lacetera2012heuristic}, and cluster prices on round numbers \citep{harris1991stock}. Discreteness also matters for equilibrium analysis \citep{rasooly2020discrete, filosratsikas2023complexity, bichler2025computing}.
+
+\section{Concluding remarks}\label{sec:outlook}
+
+\emph{Menus and predictability.} An action enters the analysis twice: once through the uniform conjecture, which determines the anchors, and once as an option for the player. Deleting an action that no type is conjectured to take can therefore change other types' predictions, in either direction.\footnote{Under the first-price rule at the uniform benchmark, take $T = \{1,6\}$ and $A = \{0,3,4\}$. The anchors are $(0,4)$ and $F_p(6) = \{0,3,4\}$, although no type is conjectured to bid 3. Deleting bid 3 changes the anchors to $(0, \{0,4\})$ and gives $F_p(6) = \{0\}$. In the other direction, take $T = \{2,4,6\}$ and $A = \{0,1,3\}$. The anchors are $(1, 1, \{1,3\})$, no type is conjectured to bid 0, and every type is predictable, so $P(p) = 1$. Deleting bid 0 changes the anchors to $(1, \{1,3\}, 3)$ through the uniform conjecture; type 4 now lies in the dead zone $(3, 5)$ of Corollary \ref{cor:deadzone} and is unpredictable, so $P(p) = \tfrac23$.} This is a consequence of deriving the conjecture from the menu, and it means that predictability does not satisfy independence of irrelevant alternatives. Under a conjecture profile that is fixed independently of the menu and puts no weight on the deleted action, deleting an action outside $F_p(t)$ leaves $F_p(t)$ unchanged.
+
+\emph{Further rounds of reasoning.} We stop at one round of best responses to the conjecture. Iterating the construction, so that each player best responds to the prediction sets of her opponents, is left open. In the second-price auction with every value biddable, truthful bidding weakly dominates, so it is a best response to every conjecture and survives any number of rounds. At the aligned second-price menu and at the cap of Example \ref{ex:strict}, the construction returns the level-1 profile, so further rounds change nothing.
+
+\emph{More than two players.} The general results of Section \ref{sec:results} concern one player's decision problem, and their proofs use only three features: a finite, ordered set of opponent types, expected payoffs linear in the belief over them, and a conjecture for each type. With $n$ players they extend whenever the player's payoff depends on the others only through a single ordered opponent statistic, such as the highest rival type in an auction with anchors that increase in type, and the belief is held directly over that statistic. If instead a player believes that the $n-1$ opponents' types are independent draws, expected payoff is a polynomial of degree $n - 1$ in the belief, and the window arguments no longer apply. Anchors also depend on $n$, and ties among several bidders require counting them. We leave the $n$-player case to future work.
+
+\emph{Testable implications.} The model does not predict a distribution of actions, only the set of actions that may be chosen. If observed bids spread over the prediction set, it implies the following. In first-price auctions, bids should be more dispersed for interior values than for the lowest and highest values, and dispersion should fall when the bid menu is capped with the dead zone clear of values. Laboratory first-price auctions with discrete bid grids and induced values, in the tradition of \citet{kagel1987} and \citet{kagel1993independent}, could speak to these implications.
+
+\appendix
+
+\section{Proofs}\label{app:proofs}
+
+\begin{proof}[Proof of Remark \ref{rem:mono}]
+Since $Q'_p(t) \subseteq Q_p(t)$, the union defining $F'_p(t)$ ranges over a subset of the beliefs defining $F_p(t)$, with the same set $\argmax_{b \in A} U^t_q(b)$ at each shared $q$; a union over fewer index points is a subset of the union over all of them, so $F'_p(t) \subseteq F_p(t)$ for every $t$.
+
+Write $S(p)$ for the set of types predictable at $p$. Suppose $t \in S(p)$, so $F_p(t) = \{b^*\}$ is a singleton. Since $Q'_p(t)$ is nonempty and $\argmax_{b \in A} U^t_q(b)$ is nonempty at every $q$ (the maximum of finitely many numbers is attained), $F'_p(t)$ is itself nonempty; a nonempty subset of a singleton equals that singleton, so $F'_p(t) = \{b^*\}$ and $t$ remains predictable at $p$ under $Q'$. Hence $S(p) \subseteq S'(p)$, where $S'(p)$ is the set of predictable types computed from $Q'$, and summing benchmark mass over the larger set gives $P(p) = \sum_{t \in S(p)} p_t \le \sum_{t \in S'(p)} p_t = P'(p)$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition \ref{th:sources}]
+The comparison $U^t_q(b) - U^t_q(b')$ equals
+\[
+q \;\longmapsto\; \sum_{s \in T} q_s\, \delta_s ,
+\]
+an affine function of $q$ on the simplex $\Delta(T)$, whose dimension is $|T| - 1$. The argument has two parts: first, that the class $Q_p(t)$ itself occupies the full dimension $|T|-1$, so that ``almost every'' has a meaning to fix; second, a case split on $\delta$ that locates the tie set within that class.
+
+\emph{The class is full-dimensional.} Choose weights that are strictly positive, strictly below the peak, and strictly decreasing away from $t$ on each side (when $t$ is an endpoint of $T$, one side is simply empty, as with the extreme types in every example of the text); no symmetry between the two sides is required. The belief this generates satisfies every centredness inequality strictly. Because $p$ has full support, likelihood ratios $q_s/p_s$ near this belief are still close to the original ones, so the strict inequalities persist under small perturbations; each nearby belief is itself generated by its own, still strictly single-peaked, ratios as weights. Hence a whole relative neighbourhood of beliefs (of the full dimension $|T|-1$, not just the one constructed belief) lies in $Q_p(t)$.
+
+\emph{The tie set, by cases on $\delta$.} If $\delta$ is not constant across $T$, the map $q \mapsto \sum_s q_s \delta_s$ varies over the simplex, so the beliefs at which the two actions tie all lie in a single affine hyperplane, of dimension $|T| - 2$: one dimension below the simplex itself. Intersected with the full-dimensional class just established, the tie set is therefore empty or of dimension at most $|T| - 2$, strictly smaller than the class it sits inside; ``almost every centred belief ranks the pair strictly'' means exactly this: the tied beliefs form a relative-measure-zero slice of the class, and every other belief in the class ranks $b$ and $b'$ one way or the other. If $\delta$ is a nonzero constant $k$ across $T$, the map collapses to the constant value $k$ at every belief whatsoever, since the $q_s$ sum to one; the pair never ties, but the ranking is also settled once and for all by the sign of $k$, the same at every belief: this sub-case belongs to $\delta \neq 0$ by definition, though no belief ever has to be consulted to resolve it. If $\delta = 0$, the difference vanishes at every belief, and $p$ never entered the computation: the pair ties everywhere, regardless of benchmark. Together, the three sub-cases exhaust every possible $\delta$, completing the proof.
+\end{proof}
+
+\begin{proposition}[Unpredictability through ties]\label{prop:attainedtie}
+Fix a type $t$ and a full-support benchmark $p$. The type is unpredictable at $p$ if and only if there are a belief $q \in Q_p(t)$ and distinct actions $b, b' \in A$ with
+\[
+U^t_q(b) = U^t_q(b') = \max_{a \in A} U^t_q(a).
+\]
+Each witnessing pair is structural or belief-driven by Proposition \ref{th:sources}.
+\end{proposition}
+
+\begin{proof}[Proof of Proposition \ref{prop:attainedtie}]
+If some $q$ has two maximisers, both lie in $F_p(t)$, so the type is unpredictable. Conversely, suppose the type is unpredictable. Choose distinct $b, b' \in F_p(t)$ and beliefs $q^0, q^1$ at which they are optimal.
+
+\emph{Convexity.} Write $x_s = q_s/p_s$ for the likelihood ratio. For $q^\lambda = (1-\lambda) q^0 + \lambda q^1$, $\lambda \in [0,1]$, linearity gives $q^\lambda_s/p_s = (1-\lambda) x^0_s + \lambda x^1_s$: the ratio of the mixture is the same mixture of the ratios. If $x^0, x^1$ are each single-peaked at $t$ (weakly rising for $s \le t$, weakly falling for $s \ge t$), then for $s \le s' \le t$, $x^0_s \le x^0_{s'}$ and $x^1_s \le x^1_{s'}$ give $(1-\lambda) x^0_s + \lambda x^1_s \le (1-\lambda) x^0_{s'} + \lambda x^1_{s'}$ for every $\lambda \in [0,1]$; symmetrically for $s \ge s' \ge t$. So $x^\lambda$ is single-peaked at $t$ too, and $q^\lambda_s > 0$ since $q^0_s, q^1_s > 0$. Hence $q^\lambda \in Q_p(t)$ for every $\lambda \in [0,1]$, and $U^t_{q^\lambda}(a) = \sum_s q^\lambda_s\, u(a, \gamma(s); t)$ is affine in $\lambda$ for every $a \in A$.
+
+\emph{Connectedness.} Tracking $b$ against $b'$ alone only locates where those two functions cross; it does not rule out a third action beating both exactly at that crossing, so the argument must track every action's own region of optimality instead. Suppose, toward a contradiction, that no $\lambda \in [0,1]$ has two maximisers. For $a \in A$ let
+\[
+O_a = \{\lambda \in [0,1] : U^t_{q^\lambda}(a) > U^t_{q^\lambda}(a') \ \ \forall\, a' \neq a\}.
+\]
+Fix $\lambda_0 \in O_a$. Since $A$ is finite, $U^t_{q^\lambda}(a) - U^t_{q^\lambda}(a') > 0$ at $\lambda_0$ for each of finitely many $a' \neq a$; each such difference is affine, hence continuous, in $\lambda$, so each inequality persists on some interval $(\lambda_0 - \varepsilon_{a'}, \lambda_0 + \varepsilon_{a'})$. Taking $\varepsilon = \min_{a'} \varepsilon_{a'} > 0$ (a finite minimum of positive numbers), all these inequalities hold together on $(\lambda_0 - \varepsilon, \lambda_0 + \varepsilon) \cap [0,1]$, so this whole interval lies in $O_a$: each $O_a$ is relatively open in $[0,1]$.
+
+By hypothesis every $\lambda$ has a unique maximiser, so $[0,1] = \bigcup_{a \in A} O_a$, a disjoint union (uniqueness rules out $\lambda$ belonging to two different $O_a$'s). Since $0 \in O_b$ and $1 \in O_{b'}$ with $b \neq b'$, both $O_b$ and $\bigcup_{a \neq b} O_a$ are nonempty, open, disjoint, and union to $[0,1]$: a disconnection of the connected interval $[0,1]$, a contradiction. Some $\lambda^* \in [0,1]$ therefore has at least two maximisers, not necessarily $b$ and $b'$ themselves, since the argument tracks every action's own region $O_a$ rather than comparing $b$ to $b'$ alone.
+\end{proof}
+
+\begin{proof}[Proof of Theorem \ref{th:dominance}]
+\emph{Simplicity is pairwise.} $F_p(t) = \{b\}$ if and only if, for every $q \in Q_p(t)$ and every $b' \neq b$, $U^t_q(b) > U^t_q(b')$. If those strict inequalities hold, the argmax at each belief is $\{b\}$ and so is the union. Conversely, if $F_p(t) = \{b\}$ then at each $q$ the argmax is a nonempty subset of $\{b\}$, hence equal to it, so $b$ strictly beats every rival there. Fixing a pair, the definition of the difference vector gives $U^t_q(b) - U^t_q(b') = \sum_s q_s \delta^{bb'}_s$, and the two parts differ only in which beliefs are quantified over.
+
+\emph{(i), sufficiency.} Let $q \in Q_p(t)$, so $q_s \propto x_s p_s$ with $x > 0$ single-peaked at $t$. Stack the layers of $x$ as in the proof of Lemma \ref{lem:windows}: with $c_1 < \dots < c_k$ its distinct values and $c_0 = 0$,
+\[
+x \;=\; \sum_{j=1}^{k} (c_j - c_{j-1})\, \mathbf{1}[x \ge c_j],
+\]
+each superlevel set a window at $t$. Because $x$ is strictly positive, $c_1 = \min_s x_s > 0$ and the first superlevel set is all of $T$. Writing $Z = \sum_s x_s p_s > 0$,
+\[
+\sum_s q_s\, \delta_s \;=\; \frac{1}{Z} \sum_{j=1}^{k} (c_j - c_{j-1}) \sum_{s \in W_j} p_s\, \delta_s ,
+\]
+a nonnegative combination of window sums carrying strictly positive weight $c_1/Z$ on the sum over $T$. If every window sum is nonnegative and the sum over $T$ is positive, this is positive. As the pair and the belief were arbitrary, $b$ strictly beats every rival everywhere in the class.
+
+\emph{(i), necessity.} Suppose the condition fails for $b$ against some $b'$. If the sum over $T$ is nonpositive, the undistorted belief $q = p$ is centred and gives $\sum_s q_s \delta_s \le 0$. If instead some window $W$ has a negative sum, take the weight profile $\mathbf{1}_W + \varepsilon \mathbf{1}$, which is strictly positive and single-peaked at $t$; the belief it generates has $\sum_s q_s \delta_s \to \bigl(\sum_{s \in W} p_s \delta_s\bigr)/p(W) < 0$ as $\varepsilon \to 0$, hence is negative for $\varepsilon$ small. Either way $b$ fails to beat $b'$ at some centred belief.
+
+\emph{(ii), sufficiency.} If $\delta^{bb'} \ge 0$ and $\delta^{bb'} \neq 0$, every window sum is nonnegative and the sum over $T$ is $\sum_s p_s \delta_s > 0$, because $p$ has full support and some $\delta_s$ is positive. So (i) holds at every full-support $p$.
+
+\emph{(ii), necessity.} Suppose $t$ is predictable at every full-support benchmark. For $b \in A$ let $R_b$ be the set of full-support benchmarks at which $b$ witnesses (i). By (i) these cover the open simplex. They are disjoint: if $b$ and $b''$ both witnessed at $p$, then $\sum_s p_s \delta^{bb''}_s > 0$ and $\sum_s p_s \delta^{b''b}_s > 0$, contradictory since $\delta^{b''b} = -\delta^{bb''}$. They are mutually separated for the same reason: on $R_b$ the continuous function $p \mapsto \sum_s p_s \delta^{bb''}_s$ is positive and on $R_{b''}$ it is negative, so neither set meets the closure of the other. The family is finite, since $A$ is; and a connected set cannot be written as a union of finitely many nonempty, pairwise mutually separated sets, because for a finite union the closure of the union is the union of the closures. The open simplex is connected, so exactly one $R_b$ is nonempty and it is the whole simplex.
+
+Fix that $b$ and a rival $b'$. Then $\sum_s p_s \delta^{bb'}_s > 0$ at every full-support $p$. For a type $s_0$ and small $\varepsilon > 0$, the benchmark giving $s_0$ mass $1 - (|T|-1)\varepsilon$ and every other type $\varepsilon$ has full support, and its sum tends to $\delta^{bb'}_{s_0}$ as $\varepsilon \to 0$; a limit of positive numbers is nonnegative, so $\delta^{bb'}_{s_0} \ge 0$. As $s_0$ was arbitrary, $\delta^{bb'} \ge 0$, and it is not identically zero since its $p$-weighted sum is strictly positive.
+\end{proof}
+
+\begin{proof}[Proof of Proposition \ref{prop:margins}]
+\emph{(i)} For a fixed rival the margin term $U^t_q(b) - U^t_q(b')$ is affine in $q$, so its infimum over $Q_p(t)$ equals its minimum over the closure, and by Lemma \ref{lem:windows} that closure is the convex hull of the window beliefs $q^W$. At $q^W$ the term is $\bigl(\sum_{s \in W} p_s \delta^{bb'}_s\bigr)/p(W)$. Minimising over rivals as well gives the stated expression, the outer minimum passing through because a minimum of finitely many affine functions attains its infimum at an extreme point.
+
+\emph{(ii)} The singleton $\{t\}$ is a window at $t$, and its average is $\delta^{bb'}_t$. So the worst-case margin is at most $\min_{b'} \delta^{bb'}_t$ at every benchmark, and $\delta^{bb'}_t = 0$ for some rival forces the worst-case margin to zero, since robust simplicity makes $\delta^{bb'} \ge 0$ and hence every window average nonnegative at every benchmark. Robustness is what makes the claim well posed. At a merely predictable at $p$ type the worst-case margin is undefined at benchmarks where simplicity fails, so the statement cannot be made benchmark by benchmark; and the pointwise version --- zero worst-case margin at $p$ if and only if $\delta_t = 0$ --- is false, which is why (ii) needs a predicted action fixed across benchmarks. Under the first-price rule on $T = \{1, \tfrac72, 5\}$ with $A = \{0,2\}$ and $p = (\tfrac35, \tfrac15, \tfrac15)$, type $\tfrac72$ is predictable at $p$ with $\delta_t = \tfrac34 > 0$ and worst-case margin zero, the minimum being attained at a wider window; at the uniform benchmark the same type has worst-case margin $\tfrac14$. Conversely if $\delta^{bb'}_t > 0$ for every rival, take the benchmark concentrating mass $1 - (|T|-1)\varepsilon$ on $t$: every window average tends to $\delta^{bb'}_t > 0$, so the worst-case margin is positive there.
+
+\emph{(iii)} If $\delta^{bb'}_s > 0$ for every rival and every $s$, then every window average is at least $\min_{b',s} \delta^{bb'}_s > 0$, a bound free of $p$; and the benchmark concentrating on the minimising $s$ drives the corresponding window average to that value, so no larger constant works. If instead $\delta^{bb'}_{s_0} = 0$ for some rival and some $s_0$ --- robust simplicity excludes negative entries --- the benchmark concentrating on $s_0$ drives the average over the smallest window containing $s_0$ and $t$ to zero, so no positive constant survives.
+\end{proof}
+
+\begin{proof}[Proof of Corollary \ref{cor:coverage}]
+Let $b$ be the predicted action. By Theorem \ref{th:dominance}(ii), $\delta^{bb'} \ge 0$ with some strict entry, for every rival $b'$. Since every $B^0(s)$ is a singleton, $u(b, \gamma(s); t) = u(b, \gamma(s); t)$, and since the anchors exhaust $A$, the inequalities $\delta^{bb'}_s \ge 0$ range over every column of $A$ as $s$ ranges over $T$. So $u(b, a; t) \ge u(b', a; t)$ for every $a \in A$, with strict inequality for at least one $a$. Summing over $a$ gives $\sum_a u(b, a; t) > \sum_a u(b', a; t)$ for every $b' \neq b$, so $b$ is the unique maximiser in Definition \ref{def:anchor} and $B^0(t) = \{b\}$.
+\end{proof}
+
+\begin{proof}[Proof of Corollary \ref{cor:expost}]
+Suppose every type is predictable at every benchmark and $\sigma = \beta$. Fix $t$ and a rival $b'$. Because anchors are pure and $\gamma(s) = \sigma(s)$, the difference vector is $\delta^{\sigma(t) b'}_s = u(\sigma(t), \sigma(s); t) - u(b', \sigma(s); t)$. Theorem \ref{th:dominance}(ii) makes this nonnegative for every $s$ and strictly positive for some $s$, which is the definition of a weak ex-post equilibrium with the stated strictness.
+
+Conversely, suppose $\beta$ is such an equilibrium. For each $t$ the vector $\delta^{\beta(t) b'}$ has entries $u(\beta(t), \gamma(s); t) - u(b', \gamma(s); t) \ge 0$, not identically zero, for every rival $b'$. Theorem \ref{th:dominance}(ii) then makes $t$ predictable at every benchmark.
+\end{proof}
+
+\begin{proof}[Proof of Lemma \ref{lem:windows}]
+Write $x_s = q_s/p_s$ for the likelihood ratio of a belief $q$.
+
+\emph{Centred beliefs are mixtures.} Let $q \in Q_p(t)$, so $x$ is strictly positive, weakly increasing up to $t$ and weakly decreasing after $t$. Let $0 = c_0 < c_1 < \dots < c_k$ be the distinct values of $x$, together with zero. Then
+\[
+x \;=\; \sum_{j=1}^{k} (c_j - c_{j-1})\, \mathbf{1}[x \ge c_j],
+\]
+since for each $s$ the right-hand side adds up the increments $c_j - c_{j-1}$ for all $c_j \le x_s$. Each set $W_j = \{s : x_s \ge c_j\}$ contains $t$ and consists of consecutive types, since $x$ rises to $t$ and falls after it; so $W_j$ is a window at $t$. Because $c_1 = \min_s x_s$, $W_1 = T$. Writing $Z = \sum_s p_s x_s$ and $p(W) = \sum_{s \in W} p_s$, we get $q_s = p_s x_s / Z = \sum_j \lambda_{W_j} q^{W_j}_s$ with $\lambda_{W_j} = (c_j - c_{j-1})\, p(W_j)/Z$. These weights are nonnegative, they sum to $\sum_s p_s x_s / Z = 1$, and $\lambda_T = c_1 / Z > 0$.
+
+\emph{Mixtures are centred.} Let $q = \sum_W \lambda_W q^W$ with $\lambda_T > 0$. Then $q_s/p_s = \sum_W \lambda_W \mathbf{1}_W(s)/p(W)$. Each term is weakly increasing up to $t$ and weakly decreasing after $t$, because each $W$ is a set of consecutive types containing $t$, and so is their sum. The sum is at least $\lambda_T > 0$, so $q$ has full support. Hence $q \in Q_p(t)$.
+
+\emph{Closure.} By the first two parts, $Q_p(t)$ lies in the set of mixtures of window beliefs, which is closed. Conversely, every mixture with $\lambda_T = 0$ is the limit as $\varepsilon \to 0$ of the mixtures that move weight $\varepsilon$ to $W = T$, and these are centred.
+\end{proof}
+
+\begin{proof}[Proof of Lemma \ref{lem:union}]
+Every centred belief has full support, so the union is contained in the set of full-support beliefs. Conversely, a full-support belief $q$ is centred at every type relative to the benchmark $p = q$, since its likelihood ratio is constant. For the second statement, suppose $t$ is predictable at every benchmark, with $F_p(t) = \{b_p\}$. For any full-support $q$, $q \in Q_q(t)$, so $b_q$ is the unique best response at $q$. The action $b_q$ does not depend on $q$, by the connectedness argument in the proof of Theorem \ref{th:dominance}(ii). Conversely, if $t$ has the same unique best response $b$ at every full-support belief, then $F_p(t) = \{b\}$ at every benchmark.
+\end{proof}
+
+\begin{proof}[Proof of Theorem \ref{th:dual}]
+Fix $b$, let $\mathcal W$ be the set of windows at $t$, and let $M$ be the matrix with rows indexed by $a \in A$, columns by $W \in \mathcal W$, and entries $M_{aW} = U^t_{q^W}(a) - U^t_{q^W}(b)$. By Lemma \ref{lem:windows} and linearity of $U^t_q$ in $q$, $b \in F_p(t)$ if and only if
+\[
+\text{(I)} \qquad \text{there is } \lambda \in \Delta(\mathcal W) \text{ with } \lambda_T > 0 \text{ and } \textstyle\sum_W M_{aW}\lambda_W \le 0 \text{ for every } a \in A,
+\]
+since at the centred belief $q = \sum_W \lambda_W q^W$ the sum equals $U^t_q(a) - U^t_q(b)$. The condition in the theorem fails, that is, some mixed strategy does the dominating, if and only if
+\[
+\text{(II)} \qquad \text{there is } \sigma \ge 0 \text{ with } \textstyle\sum_a \sigma_a M_{aW} \ge 0 \text{ for every } W \text{ and } \sum_a \sigma_a M_{aT} > 0.
+\]
+The strict inequality forces $\sigma \neq 0$, so $\sigma$ can be scaled to a mixed strategy. We show that exactly one of (I) and (II) holds.
+
+\emph{Not both.} If $\lambda$ satisfies (I) and $\sigma$ satisfies (II), then $\sum_{a, W} \sigma_a M_{aW} \lambda_W \le 0$ by (I) and $\sigma \ge 0$, while by (II) the same sum is at least $\lambda_T \sum_a \sigma_a M_{aT} > 0$.
+
+\emph{At least one.} Consider the linear programme of maximising $y_T$ over $y \in \mathbb{R}^{\mathcal W}$ subject to $\sum_W M_{aW} y_W \le 0$ for every $a$, $y_T \le 1$ and $y \ge 0$. It is feasible ($y = 0$) and its value $v$ lies in $[0, 1]$. If $v > 0$, an optimal $y$ has $y_T > 0$, and $\lambda = y / \sum_W y_W$ satisfies (I). If $v = 0$, the dual programme, which minimises $z$ over $\sigma \ge 0$ and $z \ge 0$ subject to $\sum_a \sigma_a M_{aW} \ge 0$ for $W \neq T$ and $\sum_a \sigma_a M_{aT} + z \ge 1$, has value $0$ by strong duality. An optimal dual solution therefore has $z = 0$, so $\sum_a \sigma_a M_{aT} \ge 1$, and $\sigma$ satisfies (II).
+\end{proof}
+
+\begin{proof}[Proof of Proposition \ref{prop:perturb}]
+Under $\gamma^\varepsilon$, a type-$s$ opponent plays $\gamma(s)$ with probability $1 - \varepsilon$ and each action with probability $\varepsilon/|A|$, so
+\[
+u(b, \gamma^\varepsilon(s); t) - u(b', \gamma^\varepsilon(s); t) = (1-\varepsilon)\delta_s + \frac{\varepsilon}{|A|}\sum_{a \in A} d(a).
+\]
+Weighting by $q_s$ and summing gives the displayed identity, since $\sum_s q_s = 1$. If $\delta = 0$, the difference equals $\frac{\varepsilon}{|A|}\sum_a d(a)$ at every belief, which is zero exactly when $\sum_a d(a) = 0$ and otherwise has the same sign at every belief.
+\end{proof}
+
+\begin{proof}[Proof of Corollary \ref{cor:spaperturb}]
+Fix $t$ and $b \neq t$, and let $d(a) = u(t, a; t) - u(b, a; t)$. Truthful bidding weakly dominates every other bid in the second-price auction, so $d \ge 0$; and $d(b) > 0$, since against an opponent who bids $b$ the truthful bid wins with surplus $t - b > 0$ where $b$ only ties (if $b < t$), or loses where $b$ ties at a loss (if $b > t$). By Lemma \ref{lem:truthful}, $\beta(s) = s$, so $\delta_s = d(s) \ge 0$. By Proposition \ref{prop:perturb}, $U^t_q(t) - U^t_q(b) \ge \frac{\varepsilon}{|A|} d(b) > 0$ at every belief. Hence the truthful bid is the unique best response at every belief, and $F_p(t) = \{t\}$ at every benchmark.
+\end{proof}
+
+\begin{proof}[Proof of Corollary \ref{cor:spamargins}]
+By Lemma \ref{lem:truthful} a type-$t$ opponent bids $t$. Against a bid of $t$, a player of type $t$ earns $0$ with any bid: a lower bid loses, a tie pays $\tfrac12(t - t) = 0$, and a higher bid wins and pays $t$. So $\delta^{bb'}_t = 0$ for all $b, b'$, and Proposition \ref{prop:margins}(ii) applies.
+\end{proof}
+
+
+\begin{proof}[Proof of Corollary \ref{prop:cap}]\emph{(i)} By Definition \ref{def:anchor} the reference best responses maximise $\sum_{b' \in A} u(b, b'; t)$. Under the first-price rule bid $a_k$ earns $t - a_k$ against each lower bid, $\tfrac12 (t - a_k)$ against itself, and nothing against a higher bid, so its reference sum is $(t - a_k)\bigl(k - \tfrac12\bigr)$. With two bids the sums are $\tfrac12 (t - a_1)$ and $\tfrac32 (t - a_2)$, and
+\[
+\tfrac32 (t - a_2) - \tfrac12 (t - a_1) \;=\; t - \tfrac12 (3a_2 - a_1) \;=\; t - \theta .
+\]
+The high bid is therefore the strict reference best response above $\theta$, the low bid below it, and the two tie at $\theta$.
+
+\emph{(ii)} Write $d(a) = u(a_2, a; t) - u(a_1, a; t)$ as in the definition of the difference vector. Against the low bid the high bid wins outright where the low bid splits, so $d(a_1) = (t - a_2) - \tfrac12 (t - a_1) = \tfrac12 (t + a_1 - 2a_2)$; against the high bid the high bid splits where the low bid loses, so $d(a_2) = \tfrac12 (t - a_2)$. By (i) a believed type below $\theta$ is anchored at $a_1$ and one above $\theta$ at $a_2$, which gives the outer two values, while a believed type at $\theta$ is anchored at the uniform mixture on $\{a_1, a_2\}$, whose within-set average is $\tfrac12\bigl[d(a_1) + d(a_2)\bigr] = \tfrac12 (t - \theta)$. Finally $d(a_2) - d(a_1) = \tfrac12 (a_2 - a_1) > 0$, and the middle value is the average of the outer two, so the three increase in the stated order.
+
+\emph{(iii)} Since $|A| = 2$, Definition \ref{def:predset} makes $F_p(t)$ a singleton exactly when $\sum_s q_s \delta_s \neq 0$ for every $q \in Q_p(t)$: the sum is affine, hence continuous, and $Q_p(t)$ is convex and so connected, so a sum that never vanishes keeps one sign throughout and the same bid maximises at every belief; a sum that vanishes at some belief puts both bids into $F_p(t)$ from that belief alone. Three cases exhaust the possibilities.
+
+Suppose $\delta$ takes a strictly negative value at some $s^- \in T$ and a strictly positive value at some $s^+ \in T$. For small $\varepsilon > 0$ let $p^-$ give mass $1 - (|T| - 1)\varepsilon$ to $s^-$ and $\varepsilon$ to each other type, and define $p^+$ likewise at $s^+$. Both have full support, and as $\varepsilon \to 0$ the sums $\sum_s p^-_s \delta_s$ and $\sum_s p^+_s \delta_s$ approach $\delta_{s^-} < 0$ and $\delta_{s^+} > 0$, so for $\varepsilon$ small enough the first is negative and the second positive. The segment joining $p^-$ to $p^+$ consists of full-support benchmarks, and $p \mapsto \sum_s p_s \delta_s$ is continuous on it, so the sum vanishes at some full-support $p^\ast$ on that segment. The undistorted belief $q = p^\ast$ is centred (Definition \ref{def:centred}) and ties the two bids there, so $t$ is unpredictable at $p^\ast$ and is not predictable at every benchmark.
+
+Suppose instead $\delta \ge 0$ on $T$ with $\delta \neq 0$. Every $q \in Q_p(t)$ has full support, so $\sum_s q_s \delta_s > 0$ at every centred belief and every benchmark; hence $F_p(t) = \{a_2\}$ throughout and $t$ is predictable at every benchmark. The case $\delta \le 0$ with $\delta \neq 0$ is symmetric, with $F_p(t) = \{a_1\}$.
+
+Suppose finally $\delta = 0$. By Proposition \ref{th:sources}(ii) the pair ties at every belief and every benchmark, so $F_p(t) = \{a_1, a_2\}$ and $t$ is unpredictable at every benchmark. Since a vector taking both strict signs, a vector of one weak sign that is not identically zero, and the zero vector exhaust the possibilities, the equivalence follows.
+\end{proof}
+
+\begin{proof}[Proof of Corollary \ref{cor:deadzone}]
+Fix a type $t$. Because $T$ contains types strictly on both sides of $\theta$, Corollary \ref{prop:cap}(ii) makes both outer values $\tfrac12 (t + a_1 - 2a_2)$ and $\tfrac12 (t - a_2)$ realised on $T$, and by the same part they are the smallest and the largest of the values $\delta$ takes. They differ by $\tfrac12 (a_2 - a_1) > 0$, so they are never both zero, and Corollary \ref{prop:cap}(iii) therefore fails for $t$ exactly when they straddle zero strictly:
+\[
+\tfrac12 (t + a_1 - 2a_2) < 0 < \tfrac12 (t - a_2)
+\qquad\Longleftrightarrow\qquad
+a_2 < t < 2a_2 - a_1 ,
+\]
+that is, exactly when $t \in D(A)$. So $t$ is predictable at every benchmark if and only if $t \notin D(A)$, and by Definition \ref{def:predset} predictability is one at every full-support benchmark if and only if no type lies in $D(A)$.
+
+The same computation covers the excluded grids, which is what the hypothesis buys. Each value in Corollary \ref{prop:cap}(ii) is $\tfrac12 (t - z)$ for one of the three constants $z = a_2$, $z = \theta$, $z = 2a_2 - a_1$, listed in increasing order and so in decreasing order of the value. Let $z_{\min}$ and $z_{\max}$ be the smallest and largest constants belonging to values realised on $T$. The realised values straddle zero strictly exactly when $z_{\min} < t < z_{\max}$, and are all zero exactly when $z_{\min} = z_{\max} = t$, which needs a single realised value. Corollary \ref{prop:cap}(iii) therefore fails on the open interval between two of the three constants, degenerating to one point when $T$ lies strictly on one side of $\theta$; the hypothesis of the corollary is exactly what makes both outer constants realised, so that the interval is the whole of $D(A)$.
+\end{proof}
+
+\begin{proof}[Proof of Corollary \ref{cor:sepool}]
+By Corollary \ref{prop:cap}(ii) the three values of $\delta$ vanish at $2a_2 - a_1$, $\theta$ and $a_2$ respectively and increase in that order, so their zeros fall in the reverse order $a_2 < \theta < 2a_2 - a_1$.
+
+Suppose $T$ lies weakly below $\theta$. Each believed type then realises $\tfrac12(t + a_1 - 2a_2)$, or $\tfrac12(t - \theta)$ at $s = \theta$; and for $t \in T$ we have $t \le \theta < 2a_2 - a_1$, so the first is negative and the second weakly so. All realised values are weakly negative and not all zero, so by Corollary \ref{prop:cap}(iii) the dominant bid is $a_1$, whichever type we started from. Note that the values need not be constant in $s$: a type sitting at $\theta$ realises two of them. The case $T$ weakly above $\theta$ is symmetric, with every realised value weakly positive and $a_2$ dominant.
+
+Suppose instead $T$ straddles $\theta$ strictly, so every type realises both outer values. The middle value would need $\theta \in T$, which robust simplicity of every type excludes in this case, and the outer two are all the argument uses. They are of one weak sign exactly when $t \le a_2$, making them all weakly negative, or $t \ge 2a_2 - a_1$, making them all weakly positive; a type strictly between realises values of both signs and fails Corollary \ref{prop:cap}(iii). Every type is predictable at every benchmark by hypothesis, so none lies in $(a_2, 2a_2 - a_1)$, and as $\theta$ lies inside that interval, $t < \theta$ is equivalent to $t \le a_2$ and $t > \theta$ to $t \ge 2a_2 - a_1$.
+\end{proof}
+
+\begin{proof}[Proof of Corollary \ref{cor:fpmargins}]
+By Proposition \ref{prop:margins}(ii) the worst-case margin is zero at every benchmark exactly when the predicted bid $\sigma$ ties some rival against $a^*$. Under the first-price rule a bid $b$ earns $0$ against $a^*$ if $b < a^*$, the tie value $\tfrac12(t - a^*)$ if $b = a^*$, and $t - b$ if $b > a^*$.
+
+First locate $\sigma$. Suppose $a^* < t$. The bid $a^*$ itself earns $\tfrac12(t - a^*) > 0$ against $a^*$, so any bid earning less there is beaten at the believed type $s = t$ and cannot be robustly dominant: that excludes every $b < a^*$, which earns $0$, and every $b \ge t$, which earns $t - b \le 0$. Hence $a^* \le \sigma < t$. If instead $a^* \ge t$, then no bid earns more than $0$ against $a^*$ while $a^*$ earns $\tfrac12(t-a^*) \le 0$, and the reference sum is maximised at the lowest bid, so $a^* = \min A$ and $\sigma = a^*$.
+
+Now enumerate on $a^* \le \sigma < t$. The map $b \mapsto t - b$ is injective above $a^*$, so two winning bids never tie. A bid below $a^*$ earns $0$, which $\sigma$ cannot match: at $\sigma = a^*$ it earns $\tfrac12(t-a^*) > 0$, and at $\sigma > a^*$ it earns $t - \sigma > 0$. The bid $t$ itself earns $0$ and is likewise unmatched. The one remaining coincidence is between $a^*$ and a winning bid worth the tie value, that is $t - b = \tfrac12(t - a^*)$ and so $b = (t + a^*)/2$, which is the stated condition.
+
+On two bids, suppose $B^0(t)$ is a singleton. If $a^* = a_1$ the midpoint would have to be $a_2$, giving $t = 2a_2 - a_1$; but $2a_2 - a_1 > \theta$, so such a type anchors at $a_2$, not $a_1$. If $a^* = a_2$ the midpoint would have to exceed $a_2$ and lie in $A$, and no such bid exists. So no singleton-anchored type has a zero worst-case margin. At $t = \theta$ the reference ties and the anchor is the even mixture, so the averaged rows are $\tfrac14(t - a_1)$ for $a_1$ and $\tfrac34(t - a_2)$ for $a_2$; these are equal exactly when $2t = 3a_2 - a_1$, that is at $t = \theta$.
+\end{proof}
+
+\begin{corollary}[A cap that needs only a lower bound on values]\label{cor:floor}
+Let the payoff rule be first-price with $A = \{a_1, a_2\}$, $a_1 < a_2$. If $2a_2 - a_1 \le \min T$, then $P(p) = 1$ at every full-support benchmark, and every type bids $a_2$.
+\end{corollary}
+
+\begin{proof}[Proof of Corollary \ref{cor:floor}]
+Since $\theta < 2a_2 - a_1 \le \min T$, every type lies strictly above $\theta$, so by Corollary \ref{prop:cap}(ii) the only value $\delta$ takes on $T$ is $\tfrac12 (t - a_2)$. It vanishes only at $t = a_2$, and $a_2 < 2a_2 - a_1 \le \min T$, so no type attains it. For every type the realised value is therefore of one strict sign, and Corollary \ref{prop:cap}(iii) makes every type predictable at every benchmark.
+\end{proof}
+
+\begin{proof}[Proof of Lemma \ref{lem:truthful}]
+Truthful bidding weakly dominates every other bid under the second-price rule, and restricting bids to the finite menu $A$ leaves that untouched, since the comparison is pointwise against each opponent bid. What the lemma adds is uniqueness: the reference best response is not merely weakly optimal but the only maximiser, and that is what the strict state supplies. Fix a deviation $b \neq t$ and take the opponent bid $a = b$. If $b < t$, truth wins a surplus that $b$ only splits; if $b > t$, truth avoids a loss that $b$ splits. So truth is strictly better at $a = b$ and weakly better everywhere else, and any reference of full support gives $a = b$ positive weight. Hence $\sum_{a \in A} R_A(a)\, u(t, a; t) > \sum_{a \in A} R_A(a)\, u(b, a; t)$ for every $b \neq t$, so $B^0(t) = \{t\}$; the uniform reference of the definition of $R_A$ is one such $R_A$, and its maximisers are those of the unweighted sum in Definition \ref{def:anchor}.
+\end{proof}
+
+\begin{proof}[Proof of Corollary \ref{th:gaps}]
+The \emph{adjacent gaps} of $t$ are the open intervals between $t$ and its neighbouring values in $T$, together with $(-\infty, \min T)$ if $t = \min T$ and $(\max T, \infty)$ if $t = \max T$; condition (iii) says that some bid lies in an adjacent gap.
+We show that a bid strictly inside an adjacent gap ties truth at every belief and benchmark, while the absence of any such bid makes truth strictly best at every belief and benchmark; together these give all three equivalences at once. Anchors are truthful (Lemma \ref{lem:truthful}), so a believed opponent of type $s$ plays $\gamma(s) = s$, which $T \subseteq A$ makes a feasible action. the definition of the difference vector keeps two objects apart: $d$, the payoff difference against each opponent \emph{action}, and $\delta$, the difference against each opponent \emph{type}, obtained by averaging $d$ over that type's anchor. Here they coincide. Each type's anchor is the single bid equal to its own value, so there is nothing to average and the bid is the type's own number: $\delta_s = d(s)$, and the row below serves as either. Compare the truthful bid with a rival $b$ through
+\[
+d(s) \;=\; u(t, s; t) - u(b, s; t), \qquad s \in T.
+\]
+Take an underbid $b < t$. Then
+\[
+d(s) \;=\;
+\begin{cases}
+0 & s < b, \\
+\tfrac12 (t - b) & s = b, \\
+t - s & b < s < t, \\
+0 & s \ge t :
+\end{cases}
+\]
+at $s = b$, bidding $t$ wins outright where $b$ only splits; at $b < s < t$, bidding $t$ wins where $b$ loses; elsewhere the two bids pay alike. So $d \ge 0$ at every type, and the rival falls into one of exactly two cases. Either $d$ is identically zero on $T$, which happens precisely when no type lies in $[b, t)$ --- that is, precisely when $b$ sits strictly inside the gap below $t$ --- or $d$ is strictly positive at some type. Overbids are symmetric, with $[b, t)$ replaced by $(t, b]$. The two cases give the two implications below.
+
+\emph{A bid in an adjacent gap.} Truth weakly dominates every rival, so it is optimal at every belief. A bid in an adjacent gap has $d = 0$ on all of $T$; it therefore ties truth at every belief, making $t$ unpredictable at every benchmark. Weak dominance supplies attainment for free.
+
+\emph{No bid in either gap.} If neither adjacent gap contains a bid, then every rival has $d(s) > 0$ at some type $s$. Full support gives that type positive probability, while $d \ge 0$ everywhere, so $U^t_q(t) > U^t_q(b)$ for every $b \neq t$ and every $q \in Q_p(t)$. Thus $F_p(t) = \{t\}$ at every benchmark. These two implications prove the equivalence, and summing the masses of the predictable types gives $P(p)$.
+
+For the final claim, if $A = T$ no bid lies strictly between values or outside $[\min T, \max T]$, so every type is predictable at every benchmark and $P(p) = 1$. If $T \subseteq A$ but $A \neq T$, take $b \in A \setminus T$. It lies strictly between two consecutive values or beyond an extreme value, so it satisfies (iii) for at least one type, which is then unpredictable at every benchmark; as that type has positive benchmark mass, $P(p) < 1$.
+\end{proof}
+
+\section{Tied anchors and pure conjectures}\label{app:resolutions}
+
+When $B^0(s)$ contains several actions, Definition \ref{def:anchor} spreads the conjecture equally over them. An alternative is a \emph{pure resolution} $\rho$, a conjecture profile that assigns to each type $s$ a single action $\rho(s) \in B^0(s)$. Every pure resolution is a conjecture profile, so all results of Section \ref{sec:results} apply to it; we write $F^\rho_p(t)$ for the resulting prediction set. This appendix asks whether equal weighting produces predictions that no pure resolution supports.
+
+\begin{lemma}[Averaging]\label{lem:pairwise}
+Fix a type $t$, a belief $q$ and two actions $b, b'$. Under the level-1 profile $\beta$, $U^t_q(b) - U^t_q(b')$ is a weighted average of the same difference under the pure resolutions. Hence if $b$ is optimal at $q$ under $\beta$, then for every $b'$ some pure resolution leaves $b$ at least as good as $b'$ at $q$.
+\end{lemma}
+
+\begin{corollary}[Two actions]\label{cor:binary}
+If $|A| = 2$, then $F_p(t) \subseteq \bigcup_{\rho} F^{\rho}_p(t)$ for every type and benchmark, where $\rho$ ranges over the pure resolutions.
+\end{corollary}
+
+With three or more actions the containment can fail in both directions.
+
+\begin{example}\label{ex:hedge}
+Let $T = \{1, 2\}$ and $A = \{0, 1, 2, 3\}$, with payoffs
+\[
+u(\cdot\,, \cdot\,; 1) = \begin{pmatrix} 1&1&1&1 \\ 3&0&0&1 \\ 0&0&2&0 \\ 0&0&0&0 \end{pmatrix},
+\qquad
+u(\cdot\,, \cdot\,; 2) = \begin{pmatrix} 3&-2&0&0 \\ -2&3&0&0 \\ 1&1&0&0 \\ -3&-3&3&0 \end{pmatrix},
+\]
+where rows are own actions and columns opponent actions, both in the order $0,1,2,3$. Then $B^0(1) = \{0,1\}$ and $B^0(2) = \{2\}$. At the uniform benchmark, type 2 has $F_p(2) = \{2, 3\}$ under $\beta$, and $\{0, 3\}$ and $\{1, 3\}$ under the two pure resolutions.
+\end{example}
+
+Actions 0 and 1 each do well against one resolution of type 1's tie and badly against the other; action 2 does moderately well against both. A player who knows how the tie is resolved chooses the matching action 0 or 1 (or action 3). A player who does not know it may choose action 2, which no pure resolution predicts.
+
+The weight on the tied actions also matters. In Example \ref{ex:tied}, a conjecture that puts weight $w$ on bid 0 in type 3's tied anchor gives type 3 the difference vector $(\tfrac12,\, w - \tfrac12,\, -\tfrac12)$ for bid 0 over bid 2. At $w = \tfrac12$ the middle entry is zero and both signs occur at every benchmark. At any other $w$ the prediction depends on the benchmark: at $w = \tfrac34$ and $p = (\tfrac14, \tfrac12, \tfrac14)$, type 3 is predictable with $F_p(3) = \{0\}$.
+
+\begin{proof}[Proof of Lemma \ref{lem:pairwise}]
+Choose $\rho(s)$ independently and uniformly from $B^0(s)$ for each $s$. The probability that a type-$s$ opponent plays $a$ is then $1/|B^0(s)|$ for $a \in B^0(s)$, which is $\beta(s)$. Since $U^t_q$ is linear in the conjectured play of each type, the expected value of $U^t_q(b) - U^t_q(b')$ under the random resolution equals its value under $\beta$. If that value is nonnegative, it is nonnegative for at least one resolution.
+\end{proof}
+
+\begin{proof}[Proof of Corollary \ref{cor:binary}]
+With two actions, $b$ is optimal at $q$ exactly when $U^t_q(b) - U^t_q(b') \ge 0$ for the single other action $b'$. By Lemma \ref{lem:pairwise} some pure resolution has the same inequality at $q$, and $b$ is optimal there.
+\end{proof}
+
+\bibliography{ref}
+
+\end{document}
