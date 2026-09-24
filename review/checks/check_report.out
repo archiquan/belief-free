@@ -1,0 +1,22 @@
+=== 1. Footnote 6 (concluding section), second witness: FPA T={2,4,6}
+ A=[0, 1, 3]: reference sums {2: {0: Fraction(1, 1), 1: Fraction(3, 2), 3: Fraction(-5, 2)}, 4: {0: Fraction(2, 1), 1: Fraction(9, 2), 3: Fraction(5, 2)}, 6: {0: Fraction(3, 1), 1: Fraction(15, 2), 3: Fraction(15, 2)}}
+   anchors {Fraction(2, 1): [Fraction(1, 1)], Fraction(4, 1): [Fraction(1, 1)], Fraction(6, 1): [Fraction(1, 1), Fraction(3, 1)]}; P(uniform) = 1
+ A=[1, 3]: reference sums {2: {1: Fraction(1, 2), 3: Fraction(-3, 2)}, 4: {1: Fraction(3, 2), 3: Fraction(3, 2)}, 6: {1: Fraction(5, 2), 3: Fraction(9, 2)}}
+   anchors {Fraction(2, 1): [Fraction(1, 1)], Fraction(4, 1): [Fraction(1, 1), Fraction(3, 1)], Fraction(6, 1): [Fraction(3, 1)]}; P(uniform) = 2/3
+=== 1b. Footnote 6, first witness: FPA T={1,6}
+ A=[0, 3, 4]: anchors {Fraction(1, 1): [Fraction(0, 1)], Fraction(6, 1): [Fraction(4, 1)]}; P(uniform) = 1/2
+ A=[0, 4]: anchors {Fraction(1, 1): [Fraction(0, 1)], Fraction(6, 1): [Fraction(0, 1), Fraction(4, 1)]}; P(uniform) = 1
+=== 2. Item B: perturbed anchors, eps = 1/100
+ SPA A=0..5, T=[1, 3, 5]: P(uniform) eps=0 -> 0, eps=1/100 -> 1
+ B(iii) SPA, every grid T<=A<={0..8}, 25 benchmarks: 0 failures of P=1 in 1600 cases (a search)
+ FPA Ex.1 type 3 at eps=1/100: sensitive at 171/171 benchmarks
+ FPA A={0,2} type 3 at eps=1/100: sensitive at 171/171 benchmarks
+   sum_a d(a) for bid0 vs bid2, type 3: 0
+=== 3. Rationalizability, Example 1, type 1 (FPA A={0,1,2})
+ u(b,a;1) rows: {0: ['1/2', '0', '0'], 1: ['0', '0', '0'], 2: ['-1', '-1', '-1/2']}
+ rationalizable sets (grid search over beliefs, denom 30): {1: {0, 1}, 3: {1, 2}, 5: {1, 2}}
+ paper's F_p (uniform): 1:[0], 3:[1,2], 5:[2]
+=== 2b. Item B(ii) nuance: is FPA Ex.1 type 3 still sensitive at EVERY benchmark for fixed eps?
+ eps=1/100, p=((19/20/2),(19/20/2),1/20): type 3 sensitive
+ eps=1/100, p=((99/100/2),(99/100/2),1/100): type 3 sensitive
+ eps=1/100, p=((999/1000/2),(999/1000/2),1/1000): type 3 simple, bids 1
