@@ -10,6 +10,8 @@ the referee report driving the current revision, and verification scripts.
 - `review/Report_quan_JMP_20260923.pdf` — referee-style report (Claude, prompted by
   supervisor), 23 Sep 2026. Recommendation: major revision; 2-month plan, items A–G.
 - `review/checks/check_report.py` (+ `.out`) — exact checks of the report's claims.
+- `review/notes_borgers_li.md` — comparison with Börgers–Li (2019) and revision
+  proposals from it (incl. a proposed dominance dual for membership in `F_p(t)`).
 - `setup.sh` — cloud environment setup (Python science stack, LaTeX).
 
 ## Model in one paragraph
