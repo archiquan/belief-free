@@ -87,3 +87,30 @@ centred `q` is contained in `F_p(t)`.
 10. **Naming.** "Simple" collides with BL, Li (2017) and Pycia–Troyan, which all use
     it for the agent's problem. Since this paper asks the analyst's question,
     consider "determinate" or "pinned" types.
+
+## 3. Agreed reframing (24 Sep 2026, author approved recording it)
+
+- **Working title:** *Predictable Play Without a Common Prior*. The introduction
+  must say plainly that the prior is what's dropped; `T`, `A` and `u` remain common
+  knowledge (report §3.1).
+- **The conjecture profile is a primitive.** `γ: T → Δ(A)` (the agent's strategic
+  belief about each opponent type) is a primitive, and predictability is
+  `P(p; γ)`. The draft's anchor `β` is the canonical instance: level-1 against a
+  uniform level-0.
+  - Hold for every `γ`: Lemma 1, Theorem 1 (i, ii), Prop 2, the attained-tie result,
+    the reduction lemma, margins, and the new dual theorem.
+  - Hold for every full-support reference: the SPA results.
+  - Specific to the uniform reference: the FPA cutoff `θ`, caps, dead zone,
+    coverage and ex-post corollaries.
+- **Profiles may differ across agents at no cost.** `F_p(t)` uses only type `t`'s
+  own conjecture, so each type can hold its own `γ_t`. No shared strategic belief
+  is needed.
+- **Fix `γ` before looking at behaviour** (uniform by default, or estimated from
+  level-k or cognitive-hierarchy data). Otherwise `P` can be tuned to any data.
+- **Optional BL compatibility:** each `γ(s)` supported on type `s`'s weakly
+  undominated actions. The uniform anchor satisfies it.
+- **Justify the uniform instance empirically and by convention** (Nagel,
+  Stahl–Wilson, Crawford–Iriberri), not as "derived from an axiom". State the
+  robustness honestly.
+- **Lead 1 is written up for general `γ`:** `review/proposals/prediction_set_dual.tex`,
+  checked by `review/checks/check_dual.py` (470 cases, 0 refutations).

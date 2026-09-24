@@ -1,0 +1,173 @@
+% Proposal (not in the draft): general conjecture profiles and a dominance
+% characterisation of prediction sets. Written 24 Sep 2026 at the author's request.
+% Exact check: review/checks/check_dual.py (+ .out).
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\title{Proposal: prediction sets under a general conjecture profile}
+\date{24 September 2026}
+\begin{document}
+\maketitle
+
+\section*{Setting}
+
+Keep $T$, $A$, $u$, the benchmark $p$ (full support) and the centred class $Q_p(t)$ of
+the draft. Replace the anchor by an arbitrary \emph{conjecture profile}
+$\gamma : T \to \Delta(A)$, the agent's strategic belief about how each opponent type
+plays. The draft's anchor $\beta$ is one instance: the uniform mixture over
+the best responses to the uniform reference. Write
+\[
+\bar u(b,\gamma(s);t) = \sum_{a \in A} \gamma(s)(a)\, u(b,a;t), \qquad
+U^t_q(b) = \sum_{s\in T} q_s\, \bar u(b,\gamma(s);t),
+\]
+and $F^\gamma_p(t) = \bigcup_{q \in Q_p(t)} \argmax_{b\in A} U^t_q(b)$. Because
+$F^\gamma_p(t)$ uses only the conjecture held by type $t$, the profile may
+differ across perceiving types ($\gamma = \gamma_t$) with no change to anything below.
+
+\begin{remark}[What carries over verbatim]
+The proofs of Lemma~1 (windows), Theorem~1 (both parts), Proposition~2 (two
+sources), the attained-tie proposition, the reduction lemma and the margins
+proposition use the anchor only through the rows $\bar u(b,\beta(s);t)$. They hold
+for every $\gamma$ with $\beta$ replaced by $\gamma$. Results that compute the anchor
+from the uniform reference (the first-price cutoff $\theta$, the caps, the dead zone,
+coverage and the ex-post corollary) are statements about the instance
+$\gamma = \beta$. The second-price results hold for the anchor computed from any
+full-support reference (Lemma, Truthful anchor).
+\end{remark}
+
+\begin{remark}[Compatibility]
+Following B\"orgers and Li (2019), call $\gamma$ \emph{compatible} if each $\gamma(s)$
+is supported on actions not weakly dominated for type $s$. The draft's anchor is
+compatible: a best response to a full-support reference is never weakly dominated.
+Compatibility is not used in the theorem below.
+\end{remark}
+
+\section*{The centred class as a set of mixtures}
+
+Fix $t$ and let $\mathcal W_t$ be the set of windows at $t$ (consecutive types
+containing $t$). Write $q^W$ for the benchmark restricted to $W$ and renormalised.
+
+\begin{lemma}[Exact description]\label{lem:exact}
+$Q_p(t) = \bigl\{ \sum_{W \in \mathcal W_t} \lambda_W q^W : \lambda \in \Delta(\mathcal W_t),\ \lambda_T > 0 \bigr\}$.
+\end{lemma}
+
+\begin{proof}
+($\subseteq$) Let $q \in Q_p(t)$ with ratio $x_s = q_s/p_s$, which is strictly positive and
+single-peaked at $t$. With $0 = c_0 < c_1 < \dots < c_k$ the distinct values of $x$,
+the layer-cake identity $x = \sum_j (c_j - c_{j-1}) \mathbf 1[x \ge c_j]$ writes $x$ as a
+nonnegative combination of indicators of the superlevel sets $W_j$. Each $W_j$ is a
+window at $t$, and $W_1 = T$ because $c_1 = \min_s x_s$. Hence
+$q = \sum_j \lambda_{W_j} q^{W_j}$ with
+$\lambda_{W_j} = (c_j - c_{j-1})\,p(W_j) / \sum_s p_s x_s$. These weights sum to one
+(proof of Lemma~1 in the draft), and $\lambda_T = c_1 / \sum_s p_s x_s > 0$.
+
+($\supseteq$) Let $q = \sum_W \lambda_W q^W$ with $\lambda_T > 0$. Then
+$q_s/p_s = \sum_W \lambda_W \mathbf 1_W(s)/p(W)$. Every $W$ contains $t$ and is an
+interval of $T$, so each summand is weakly increasing up to $t$ and weakly
+decreasing after it. The sum is therefore single-peaked at $t$, and it is at least
+$\lambda_T > 0$ everywhere, so $q$ has full support.
+\end{proof}
+
+\section*{The dominance characterisation}
+
+For $a \in A$ and $W \in \mathcal W_t$ write $v_a(W) = U^t_{q^W}(a)$, and extend it
+linearly to mixed actions $\sigma \in \Delta(A)$.
+
+\begin{definition}
+Action $b$ is \emph{window-dominated} for type $t$ at $p$ if some $\sigma \in \Delta(A)$
+satisfies $v_\sigma(W) \ge v_b(W)$ for every $W \in \mathcal W_t$, with strict
+inequality at $W = T$, where $q^T = p$.
+\end{definition}
+
+\begin{theorem}[Prediction sets are window-undominated sets]\label{th:dual}
+For every conjecture profile $\gamma$, type $t$ and full-support benchmark $p$,
+\[
+F^\gamma_p(t) = \{ b \in A : b \text{ is not window-dominated for } t \text{ at } p \}.
+\]
+\end{theorem}
+
+\begin{proof}
+Fix $b$ and let $M$ be the $A \times \mathcal W_t$ matrix with entries
+$M_{aW} = v_a(W) - v_b(W)$. By Lemma~\ref{lem:exact} and linearity of $U^t_q$ in $q$,
+\[
+b \in F^\gamma_p(t) \iff \exists\, \lambda \in \Delta(\mathcal W_t) \text{ with }
+\lambda_T > 0 \text{ and } (M\lambda)_a \le 0 \ \forall a \in A. \tag{I}
+\]
+(At $q = \sum_W \lambda_W q^W$, $(M\lambda)_a = U^t_q(a) - U^t_q(b)$, and $b$ is a
+maximiser exactly when all of these are $\le 0$.) Window domination of $b$ says
+\[
+\exists\, \sigma \ge 0 \text{ with } (\sigma^\top M)_W \ge 0\ \forall W
+\text{ and } (\sigma^\top M)_T > 0. \tag{II}
+\]
+The strict inequality forces $\sigma \neq 0$, so $\sigma$ can be normalised to
+$\Delta(A)$. It remains to show that exactly one of (I) and (II) holds.
+
+\emph{Not both.} If $\lambda$ satisfies (I) and $\sigma$ satisfies (II), then
+$\sigma^\top M \lambda \le 0$ because $\sigma \ge 0$ and $M\lambda \le 0$. But also
+$\sigma^\top M \lambda = \sum_W \lambda_W (\sigma^\top M)_W \ge \lambda_T (\sigma^\top M)_T > 0$,
+a contradiction.
+
+\emph{At least one.} Consider the linear programme
+\[
+\text{(P)}\quad \max\ y_T \quad \text{s.t.}\quad M y \le 0,\ \ y_T \le 1,\ \ y \ge 0,
+\qquad y \in \mathbb R^{\mathcal W_t}.
+\]
+It is feasible ($y = 0$) and bounded by $1$, so it has an optimal value $v \in [0,1]$.
+If $v > 0$, an optimal $y$ has $y_T > 0$, and $\lambda = y / \sum_W y_W$ satisfies (I).
+Suppose instead $v = 0$. The dual of (P) has a variable $\sigma_a \ge 0$ for each row
+of $M y \le 0$ and a variable $z \ge 0$ for the constraint $y_T \le 1$:
+\[
+\text{(D)}\quad \min\ z \quad \text{s.t.}\quad (\sigma^\top M)_W \ge 0 \ \ (W \neq T),\qquad
+(\sigma^\top M)_T + z \ge 1,\qquad \sigma \ge 0,\ z \ge 0.
+\]
+By strong duality (D) has an optimal solution with $z = v = 0$, so
+$(\sigma^\top M)_T \ge 1 > 0$ and $(\sigma^\top M)_W \ge 0$ for all $W$: this is (II).
+\end{proof}
+
+\begin{remark}[Reading and relation to the draft]
+\begin{enumerate}
+\item The prediction set is an \emph{undominated set} in an auxiliary decision problem
+  whose ``states'' are the window beliefs. Dominance is weak across windows and strict
+  at the undistorted belief $q = p$. It is the analogue of B\"orgers and Li's
+  $UD_i$ (weak dominance by pure or mixed strategies), with states of the world
+  replaced by window beliefs. Equivalently, $F^\gamma_p(t)$ is the E-admissible set
+  (Levi) of the credal set $Q_p(t)$, and the theorem is its dominance
+  characterisation.
+\item Theorem~1(i) of the draft is the case of a singleton. If $F_p(t) = \{b\}$, every
+  rival is window-dominated, and Theorem~1(i) says the pure action $b$ itself
+  dominates every rival. The new content is at sensitive types: membership, which
+  the draft calls an existential that ``does not factorise'', reduces to one linear
+  programme per action. That closes the open question at the end of \S3 and \S7.
+\item Strictness at $p$ is where the boundary rule of the draft lives: window
+  restrictions other than $q^T$ are closure points, not beliefs. If ``strict at
+  $W = T$'' is replaced by ``strict at every $W$'', the same argument (with
+  $\lambda \in \Delta(\mathcal W_t)$ unrestricted) characterises the closure
+  version $\bigcup_{q \in \overline{Q_p(t)}} \argmax$.
+\item Robust version. $b \in F^\gamma_p(t)$ for \emph{some} full-support $p$ iff $b$
+  is a best response to some full-support $q$, because every full-support belief is
+  $p$ at $p = q$. By the same alternative (with windows replaced by point masses
+  and every column required strictly positive), this holds iff no $\sigma$
+  weakly dominates $b$ against $\gamma$ type by type. In other words, $b$ is
+  admissible in the reduced game.
+\end{enumerate}
+\end{remark}
+
+\section*{Checks}
+
+Items (1)--(3) are to be checked by exact computation. See
+\texttt{review/checks/check\_dual.py}: the LP of (II) solved exactly by vertex
+enumeration in rational arithmetic, compared against the grid method of
+\texttt{ripples.py} (which is sound, so any action it finds must be undominated) on
+the draft's examples, the knife-edge benchmark of Example~1(iii), the specialists-and-hedge
+example, and random instances with \emph{non-anchor} conjecture profiles.
+Item (4) is a sketch and has not been checked.
+
+\end{document}

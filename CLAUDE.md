@@ -12,6 +12,11 @@ the referee report driving the current revision, and verification scripts.
 - `review/checks/check_report.py` (+ `.out`) — exact checks of the report's claims.
 - `review/notes_borgers_li.md` — comparison with Börgers–Li (2019) and revision
   proposals from it (incl. a proposed dominance dual for membership in `F_p(t)`).
+- `review/proposals/prediction_set_dual.tex` — proposed theorem for general conjecture
+  profile γ: `F_p(t)` = window-undominated actions (LP duality proof). Checked by
+  `review/checks/check_dual.py` (470 cases, 0 refutations). Not yet in the draft.
+- Working title (agreed): *Predictable Play Without a Common Prior*; γ becomes a
+  primitive, uniform anchor the canonical instance (see notes §3).
 - `setup.sh` — cloud environment setup (Python science stack, LaTeX).
 
 ## Model in one paragraph
