@@ -87,7 +87,7 @@ For $s \in T$, let
 \[
 B^0(s) = \argmax_{b \in A} \ \sum_{b' \in A} u(b, b'; s)
 \]
-be the set of best responses of type $s$ to the uniform conjecture. The \emph{anchor} $\beta(s)$ of type $s$ is the uniform distribution on $B^0(s)$. The \emph{level-1 conjecture profile} is $\beta$.
+be the set of best responses of type $s$ to the uniform conjecture. The \emph{anchor} $\beta(s)$ of type $s$ is the uniform distribution on $B^0(s)$. The \emph{level-1 conjecture profile} $\beta$ assigns to each type $s$ its anchor $\beta(s)$; it is the conjecture profile $\gamma = \beta$. When every $B^0(s)$ is a singleton, we identify $\beta(s)$ with the single action it selects and write, for example, $\beta = (0,1,2)$ for the profile of anchors of types $1, 3, 5$.
 \end{definition}
 
 When $B^0(s)$ contains more than one action, the anchor spreads weight equally over them. This expresses that the conjecturing player has no reason to favour one of the tied actions; it is not a claim that the opponent randomises. Appendix \ref{app:resolutions} compares this choice with conjectures that pick one of the tied actions. The uniform starting point is the standard specification of level-0 play in estimated level-$k$ models, and measured depths of reasoning concentrate at one or two steps \citep{nagel1995, stahl1995, costagomes2001, crawford2007levelk, arad2012}. We regard it as a convenient and empirically grounded default, not as the only reasonable conjecture. Section \ref{sec:perturb} shows which conclusions change when the conjecture is perturbed.
@@ -203,7 +203,7 @@ A structural tie means that $b$ and $b'$ earn the same payoff against every conj
 Structural ties rely on the conjecture putting zero weight on the opponent actions at which $b$ and $b'$ differ. A natural check, in the spirit of cognitive hierarchy models \citep{camerer2004cognitive}, is to let each opponent type play the uniform conjecture with a small probability. For $\varepsilon \in (0, 1)$ let $\gamma^\varepsilon(s) = (1 - \varepsilon)\gamma(s) + \varepsilon R_A$. For a type $t$ and actions $b, b'$, let $d(a) = u(b, a; t) - u(b', a; t)$ be the difference against each opponent action $a$.
 
 \begin{proposition}[Perturbed conjectures]\label{prop:perturb}
-Fix $t$, distinct $b, b'$ and $\varepsilon \in (0,1)$. Under $\gamma^\varepsilon$,
+Fix $t$, distinct $b, b'$ and $\varepsilon \in (0,1)$. When $U^t_q$ is computed with the conjecture profile $\gamma^\varepsilon$ in place of $\gamma$,
 \[
 U^t_q(b) - U^t_q(b') = (1-\varepsilon) \sum_{s \in T} q_s \delta_s + \frac{\varepsilon}{|A|} \sum_{a \in A} d(a).
 \]
@@ -483,13 +483,13 @@ Fix that $b$ and a rival $b'$. Then $\sum_s p_s \delta^{bb'}_s > 0$ at every ful
 \end{proof}
 
 \begin{proof}[Proof of Corollary \ref{cor:coverage}]
-Let $b$ be the predicted action. By Theorem \ref{th:dominance}(ii), $\delta^{bb'} \ge 0$ with some strict entry, for every rival $b'$. Since every $B^0(s)$ is a singleton, $u(b, \gamma(s); t) = u(b, \gamma(s); t)$, and since the anchors exhaust $A$, the inequalities $\delta^{bb'}_s \ge 0$ range over every column of $A$ as $s$ ranges over $T$. So $u(b, a; t) \ge u(b', a; t)$ for every $a \in A$, with strict inequality for at least one $a$. Summing over $a$ gives $\sum_a u(b, a; t) > \sum_a u(b', a; t)$ for every $b' \neq b$, so $b$ is the unique maximiser in Definition \ref{def:anchor} and $B^0(t) = \{b\}$.
+Let $b$ be the predicted action. By Theorem \ref{th:dominance}(ii), $\delta^{bb'} \ge 0$ with some strict entry, for every rival $b'$. Since every $B^0(s)$ is a singleton, $u(b, \beta(s); t) = u(b, \beta(s); t)$, and since the anchors exhaust $A$, the inequalities $\delta^{bb'}_s \ge 0$ range over every column of $A$ as $s$ ranges over $T$. So $u(b, a; t) \ge u(b', a; t)$ for every $a \in A$, with strict inequality for at least one $a$. Summing over $a$ gives $\sum_a u(b, a; t) > \sum_a u(b', a; t)$ for every $b' \neq b$, so $b$ is the unique maximiser in Definition \ref{def:anchor} and $B^0(t) = \{b\}$.
 \end{proof}
 
 \begin{proof}[Proof of Corollary \ref{cor:expost}]
-Suppose every type is predictable at every benchmark and $\sigma = \beta$. Fix $t$ and a rival $b'$. Because anchors are pure and $\gamma(s) = \sigma(s)$, the difference vector is $\delta^{\sigma(t) b'}_s = u(\sigma(t), \sigma(s); t) - u(b', \sigma(s); t)$. Theorem \ref{th:dominance}(ii) makes this nonnegative for every $s$ and strictly positive for some $s$, which is the definition of a weak ex-post equilibrium with the stated strictness.
+Suppose every type is predictable at every benchmark and $\sigma = \beta$. Fix $t$ and a rival $b'$. Because anchors are pure and $\beta(s) = \sigma(s)$, the difference vector is $\delta^{\sigma(t) b'}_s = u(\sigma(t), \sigma(s); t) - u(b', \sigma(s); t)$. Theorem \ref{th:dominance}(ii) makes this nonnegative for every $s$ and strictly positive for some $s$, which is the definition of a weak ex-post equilibrium with the stated strictness.
 
-Conversely, suppose $\beta$ is such an equilibrium. For each $t$ the vector $\delta^{\beta(t) b'}$ has entries $u(\beta(t), \gamma(s); t) - u(b', \gamma(s); t) \ge 0$, not identically zero, for every rival $b'$. Theorem \ref{th:dominance}(ii) then makes $t$ predictable at every benchmark.
+Conversely, suppose $\beta$ is such an equilibrium. For each $t$ the vector $\delta^{\beta(t) b'}$ has entries $u(\beta(t), \beta(s); t) - u(b', \beta(s); t) \ge 0$, not identically zero, for every rival $b'$. Theorem \ref{th:dominance}(ii) then makes $t$ predictable at every benchmark.
 \end{proof}
 
 \begin{proof}[Proof of Lemma \ref{lem:windows}]
@@ -604,7 +604,7 @@ Truthful bidding weakly dominates every other bid under the second-price rule, a
 
 \begin{proof}[Proof of Corollary \ref{th:gaps}]
 The \emph{adjacent gaps} of $t$ are the open intervals between $t$ and its neighbouring values in $T$, together with $(-\infty, \min T)$ if $t = \min T$ and $(\max T, \infty)$ if $t = \max T$; condition (iii) says that some bid lies in an adjacent gap.
-We show that a bid strictly inside an adjacent gap ties truth at every belief and benchmark, while the absence of any such bid makes truth strictly best at every belief and benchmark; together these give all three equivalences at once. Anchors are truthful (Lemma \ref{lem:truthful}), so a believed opponent of type $s$ plays $\gamma(s) = s$, which $T \subseteq A$ makes a feasible action. the definition of the difference vector keeps two objects apart: $d$, the payoff difference against each opponent \emph{action}, and $\delta$, the difference against each opponent \emph{type}, obtained by averaging $d$ over that type's anchor. Here they coincide. Each type's anchor is the single bid equal to its own value, so there is nothing to average and the bid is the type's own number: $\delta_s = d(s)$, and the row below serves as either. Compare the truthful bid with a rival $b$ through
+We show that a bid strictly inside an adjacent gap ties truth at every belief and benchmark, while the absence of any such bid makes truth strictly best at every belief and benchmark; together these give all three equivalences at once. Anchors are truthful (Lemma \ref{lem:truthful}), so a believed opponent of type $s$ plays $\beta(s) = s$, which $T \subseteq A$ makes a feasible action. the definition of the difference vector keeps two objects apart: $d$, the payoff difference against each opponent \emph{action}, and $\delta$, the difference against each opponent \emph{type}, obtained by averaging $d$ over that type's anchor. Here they coincide. Each type's anchor is the single bid equal to its own value, so there is nothing to average and the bid is the type's own number: $\delta_s = d(s)$, and the row below serves as either. Compare the truthful bid with a rival $b$ through
 \[
 d(s) \;=\; u(t, s; t) - u(b, s; t), \qquad s \in T.
 \]
